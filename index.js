@@ -13,7 +13,17 @@ server.use(bodyParser.json());
 
 
 // entry point
-server.post('/example', function (request, response) {
+server.post('/cocktail', function (request, response) {
+    var param = request.body.intent.inputs;
+    console.log("List of your entities : ");
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    response.setHeader('Content-Type', 'application/json');
+    response.send(JSON.stringify({
+        "speech": "Hello from /example :)",
+        "posts": []
+    }));
+})
+server.post('/meal', function (request, response) {
     var param = request.body.intent.inputs;
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
