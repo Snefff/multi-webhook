@@ -19,7 +19,7 @@ server.post('/cocktail', function (request, response) {
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     var url = "https://www.thecocktaildb.com/api/json/v1/1/"
     if (param["alcohol"]) {
-        url += "=filter.php?i=" + param["alcohol"];
+        url += "filter.php?i=" + param["alcohol"];
     }
     var req = unirest("GET", url);
     console.log(req);
