@@ -36,7 +36,7 @@ server.post('/cocktail', function (request, response) {
             let drink = res.body.drinks;
             let text = "Voici les cocktails correspondants : \n"
             let output = Array(drink.length);
-            for (let i = 0; i < article.length; i++) {
+            for (let i = 0; i < drink.length; i++) {
                 output[i] = {
                     "type": "card",
                     "title": drink[i].strDrink,
