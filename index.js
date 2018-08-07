@@ -41,7 +41,6 @@ server.post('/cocktail', function (request, response) {
                     "type": "card",
                     "title": drink[i].strDrink,
                     "image": drink[i].strDrinkThumb,
-                    "subtitle": drink[i].description,
                     "buttons": [{
                         "type": "button",
                         "text": "Voir en détail",
