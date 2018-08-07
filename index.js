@@ -22,6 +22,7 @@ server.post('/cocktail', function (request, response) {
         url += "=filter.php?i=" + param["alcohol"];
     }
     var req = unirest("GET", url);
+    console.log(req);
     req.send("{}");
     req.end(function (res) {
         if (res.error) {
