@@ -109,12 +109,7 @@ server.post('/meal', function (request, response) {
                     "type": "card",
                         "title": meal[0].strMeal,
                         "image": meal[0].strMealThumb,
-                        "text" : strInstructions,
-                        "buttons": [{
-                            "type": "button",
-                            "text": "Voir en détail",
-                            "value": "Detail " + meal[0].idMeal
-                        }]
+                        "text" : meal[0].strInstructions,
                 }
                 for(let i = 0; i < 20 ; i++) {
                     if(meal["strIngredient" + i]) {
