@@ -24,6 +24,8 @@ server.post('/cocktail', function (request, response) {
         url += "random.php";
     } else if (param["Cocktail name"]) {
         url += "/search.php?s=" + param["Cocktail name"];
+    }else if (param["ggwg/number"]) {
+        url += "/lookup.php?i=" + param["ggwg/number"];
     }
         var req = unirest("GET", url);
     console.log(req);
