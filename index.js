@@ -66,6 +66,7 @@ server.post('/cocktail', function (request, response) {
                         }]
                     };
             }
+            console.log(output[0]);
             console.log(output);
             response.setHeader('Content-Type', 'application/json');
             response.send(JSON.stringify({
@@ -85,6 +86,8 @@ server.post('/meal', function (request, response) {
         url += "filter.php?c=" + param["category"];
     } else if (param["area"]) {
         url += "filter.php?a=" + param["area"];
+    } else if (param["Random meal"]) {
+        url += "random.php";
     }
         var req = unirest("GET", url);
     console.log(req);
