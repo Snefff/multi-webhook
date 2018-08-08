@@ -117,7 +117,7 @@ server.post('/meal', function (request, response) {
                         output[i] = {
                             "type":"card",
                             "title": meal[0]["strIngredient"+i],
-                            "subtitle":  meal[0]["strMeasure"+i]
+                            "text": meal[0]["strMeasure"+i]
                         }
                     }
                 }
