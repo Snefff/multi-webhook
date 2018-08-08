@@ -111,13 +111,14 @@ server.post('/meal', function (request, response) {
                         "image": meal[0].strMealThumb,
                         "text" : meal[0].strInstructions,
                 }
-                for(let i = 0; i < 20 ; i++) {
+                for(let i = 1; i < 20 ; i++) {
                     if(meal["strIngredient" + i]) {
-                    output[i+1] = {
+                    output[i] = {
                         "type":"card",
                         "title": meal["strIngredient"+i],
                         "subtitle":  meal["strMeasure"+i]
                     }
+                    console.log(output[i]);
                 }
             }
             }else {
