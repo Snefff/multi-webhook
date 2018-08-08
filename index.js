@@ -36,6 +36,7 @@ server.post('/cocktail', function (request, response) {
             }));
         } else if (res.body.drinks.length > 0) {
             let drink = res.body.drinks;
+            let output = Array(drink.length);
             let text = "";
             if(param["alcohol"]) {
                 text += "Voici les cocktails correspondants : \n"
@@ -54,7 +55,6 @@ server.post('/cocktail', function (request, response) {
                 }
             }else {
                 text += "Voici une recette que tu devrais tester !\n"
-                let output = Array(drink.length);
                     output[0] = {
                         "type": "card",
                         "title": drink[0].strDrink,
@@ -99,6 +99,7 @@ server.post('/meal', function (request, response) {
             }));
         } else if (res.body.meals.length > 0) {
             let meal = res.body.meals;
+            let output = Array(meal.length);
             let text = "";
             if(param["category"]) {
                 text +="Voici les recettes correspondantes : \n"
@@ -117,7 +118,6 @@ server.post('/meal', function (request, response) {
                 }
             }else{
                 text += "Voici une recette que tu devrais tester !\n"
-                let output = Array(meal.length);
                     output[0] = {
                         "type": "card",
                         "title": meal[0].stMeal,
