@@ -22,6 +22,8 @@ server.post('/cocktail', function (request, response) {
         url += "filter.php?i=" + param["alcohol"];
     } else if (param["Random cocktail"]) {
         url += "random.php";
+    } else if (param["Cocktail name"]) {
+        url += "/search.php?s=" + param["Cocktail name"];
     }
         var req = unirest("GET", url);
     console.log(req);
@@ -38,32 +40,22 @@ server.post('/cocktail', function (request, response) {
             let drink = res.body.drinks;
             let output = Array(drink.length);
             let text = "";
-            if(param["alcohol"]) {
+            if(param["alcohol"] || param["Cocktail name"]) {
                 text += "Voici les cocktails correspondants : \n"
-                for (let i = 0; i < drink.length; i++) {
-                    output[i] = {
-                        "type": "card",
-                        "title": drink[i].strDrink,
-                        "image": drink[i].strDrinkThumb,
-                        "buttons": [{
-                            "type": "button",
-                            "text": "Voir en détail",
-                            "value": drink[i].idDrink
-                        }]
-                    };
-                }
-            }else {
+            }else{
                 text += "Voici une recette que tu devrais tester !\n"
-                    output[0] = {
-                        "type": "card",
-                        "title": drink[0].strDrink,
-                        "image": drink[0].strDrinkThumb,
-                        "buttons": [{
-                            "type": "button",
-                            "text": "Voir en détail",
-                            "value": drink[0].idDrink
-                        }]
-                    };
+            }
+            for (let i = 0; i < drink.length; i++) {
+                output[i] = {
+                    "type": "card",
+                    "title": drink[i].strDrink,
+                    "image": drink[i].strDrinkThumb,
+                    "buttons": [{
+                        "type": "button",
+                        "text": "Voir en détail",
+                        "value": "Detail " + drink[i].idDrink
+                    }]
+                };
             }
             console.log(output[0]);
             console.log(output);
@@ -103,33 +95,22 @@ server.post('/meal', function (request, response) {
             let meal = res.body.meals;
             let output = Array(meal.length);
             let text = "";
-            if(param["category"]) {
+            if(param["Category"] || param["Area"]) {
                 text +="Voici les recettes correspondantes : \n"
-                let output = Array(meal.length);
-                for (let i = 0; i < meal.length; i++) {
-                    output[i] = {
-                        "type": "card",
-                        "title": meal[i].strMeal,
-                        "image": meal[i].strMealThumb,
-                        "buttons": [{
-                            "type": "button",
-                            "text": "Voir en détail",
-                            "value": meal[i].idMeal
-                        }]
-                    };
-                }
             }else{
                 text += "Voici une recette que tu devrais tester !\n"
-                    output[0] = {
-                        "type": "card",
-                        "title": meal[0].strMeal,
-                        "image": meal[0].strMealThumb,
-                        "buttons": [{
-                            "type": "button",
-                            "text": "Voir en détail",
-                            "value": meal[0].idMeal
-                        }]
-                    };    
+            }
+            for (let i = 0; i < meal.length; i++) {
+                output[i] = {
+                    "type": "card",
+                    "title": meal[i].strMeal,
+                    "image": meal[i].strMealThumb,
+                    "buttons": [{
+                        "type": "button",
+                        "text": "Voir en détail",
+                        "value": "Detail " + meal[i].idMeal
+                    }]
+                };
             }
             console.log(output);
             response.setHeader('Content-Type', 'application/json');
