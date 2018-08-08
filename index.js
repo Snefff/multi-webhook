@@ -40,7 +40,6 @@ server.post('/cocktail', function (request, response) {
             let text = "";
             if(param["alcohol"]) {
                 text += "Voici les cocktails correspondants : \n"
-                let output = Array(drink.length);
                 for (let i = 0; i < drink.length; i++) {
                     output[i] = {
                         "type": "card",
@@ -123,7 +122,7 @@ server.post('/meal', function (request, response) {
                 text += "Voici une recette que tu devrais tester !\n"
                     output[0] = {
                         "type": "card",
-                        "title": meal[0].stMeal,
+                        "title": meal[0].strMeal,
                         "image": meal[0].strMealThumb,
                         "buttons": [{
                             "type": "button",
