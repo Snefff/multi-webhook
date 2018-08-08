@@ -107,13 +107,13 @@ server.post('/meal', function (request, response) {
             if(param["ggwg/number"]) {
                 output[0] = {
                     "type": "card",
-                        "title": meal[i].strMeal,
-                        "image": meal[i].strMealThumb,
+                        "title": meal[0].strMeal,
+                        "image": meal[0].strMealThumb,
                         "text" : strInstructions,
                         "buttons": [{
                             "type": "button",
                             "text": "Voir en détail",
-                            "value": "Detail " + meal[i].idMeal
+                            "value": "Detail " + meal[0].idMeal
                         }]
                 }
                 for(let i = 0; i < 20 ; i++) {
