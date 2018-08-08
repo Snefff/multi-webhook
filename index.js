@@ -79,7 +79,9 @@ server.post('/meal', function (request, response) {
         url += "filter.php?a=" + param["Area"];
     } else if (param["Random meal"]) {
         url += "random.php";
-    }
+    }else if(param["ggwg/number"]) {
+        url += "lookup.php?i=" + param["ggwg/number"];
+    }   
         var req = unirest("GET", url);
     console.log(req);
     req.send("{}");
@@ -96,21 +98,46 @@ server.post('/meal', function (request, response) {
             let output = Array(meal.length);
             let text = "";
             if(param["Category"] || param["Area"]) {
-                text +="Voici les recettes correspondantes : \n"
-            }else{
-                text += "Voici une recette que tu devrais tester !\n"
+                text +="Voici les recettes correspondantes : \n";
+            }else if(param["ggwg/number"]){
+                text += "Voici le détail de la recette : \n";
+            }else {
+                text += "Voici une recette que tu devrais tester !\n";
             }
-            for (let i = 0; i < meal.length; i++) {
-                output[i] = {
+            if(param["ggwg/number"]) {
+                output[0] = {
                     "type": "card",
-                    "title": meal[i].strMeal,
-                    "image": meal[i].strMealThumb,
-                    "buttons": [{
-                        "type": "button",
-                        "text": "Voir en détail",
-                        "value": "Detail " + meal[i].idMeal
-                    }]
-                };
+                        "title": meal[i].strMeal,
+                        "image": meal[i].strMealThumb,
+                        "text" : strInstructions,
+                        "buttons": [{
+                            "type": "button",
+                            "text": "Voir en détail",
+                            "value": "Detail " + meal[i].idMeal
+                        }]
+                }
+                for(let i = 0; i < 20 ; i++) {
+                    if(meal["strIngredient" + i]) {
+                    output[i+1] = {
+                        "type":"card",
+                        "title": meal["strIngredient"+i],
+                        "subtitle":  meal["strMeasure"+i]
+                    }
+                }
+            }
+            }else {
+                for (let i = 0; i < meal.length; i++) {
+                    output[i] = {
+                        "type": "card",
+                        "title": meal[i].strMeal,
+                        "image": meal[i].strMealThumb,
+                        "buttons": [{
+                            "type": "button",
+                            "text": "Voir en détail",
+                            "value": "Detail " + meal[i].idMeal
+                        }]
+                    };
+                }
             }
             console.log(output);
             response.setHeader('Content-Type', 'application/json');
