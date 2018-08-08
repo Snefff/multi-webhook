@@ -112,15 +112,15 @@ server.post('/meal', function (request, response) {
                         "text" : meal[0].strInstructions,
                 }
                 for(let i = 1; i < 20 ; i++) {
+                    console.log(meal["strIngredient" + i]);
                     if(meal["strIngredient" + i]) {
-                    output[i] = {
-                        "type":"card",
-                        "title": meal["strIngredient"+i],
-                        "subtitle":  meal["strMeasure"+i]
+                        output[i] = {
+                            "type":"card",
+                            "title": meal["strIngredient"+i],
+                            "subtitle":  meal["strMeasure"+i]
+                        }
                     }
-                    console.log(output[i]);
                 }
-            }
             }else {
                 for (let i = 0; i < meal.length; i++) {
                     output[i] = {
