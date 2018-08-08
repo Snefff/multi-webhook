@@ -112,12 +112,12 @@ server.post('/meal', function (request, response) {
                         "text" : meal[0].strInstructions,
                 }
                 for(let i = 1; i < 20 ; i++) {
-                    console.log(meal["strIngredient" + i]);
-                    if(meal["strIngredient" + i]) {
+                    console.log(meal[0]["strIngredient" + i]);
+                    if(meal[0]["strIngredient" + i]) {
                         output[i] = {
                             "type":"card",
-                            "title": meal["strIngredient"+i],
-                            "subtitle":  meal["strMeasure"+i]
+                            "title": meal[0]["strIngredient"+i],
+                            "subtitle":  meal[0]["strMeasure"+i]
                         }
                     }
                 }
