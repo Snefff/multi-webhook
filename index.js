@@ -82,9 +82,9 @@ server.post('/meal', function (request, response) {
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     var url = "https://www.themealdb.com/api/json/v1/1/"
-    if (param["category"]) {
+    if (param["Category"]) {
         url += "filter.php?c=" + param["category"];
-    } else if (param["area"]) {
+    } else if (param["Area"]) {
         url += "filter.php?a=" + param["area"];
     } else if (param["Random meal"]) {
         url += "random.php";
