@@ -42,20 +42,41 @@ server.post('/cocktail', function (request, response) {
             let text = "";
             if(param["alcohol"] || param["Cocktail name"]) {
                 text += "Voici les cocktails correspondants : \n"
-            }else{
-                text += "Voici une recette que tu devrais tester !\n"
+            }else if(param["ggwg/number"]) {
+                text += "Voici les détail du cocktail :\n"
+            }else  {
+                text += "Voici un cocktail que tu devrais tester !\n"
             }
-            for (let i = 0; i < drink.length; i++) {
-                output[i] = {
+            if(param["ggwg/number"]) {
+                output[0] = {
                     "type": "card",
-                    "title": drink[i].strDrink,
-                    "image": drink[i].strDrinkThumb,
-                    "buttons": [{
-                        "type": "button",
-                        "text": "Voir en détail",
-                        "value": "Detail " + drink[i].idDrink
-                    }]
-                };
+                        "title": drink[0].strDrink,
+                        "image": drink[0].strDrinkThumb,
+                        "text" : drink[0].strInstructions,
+                }
+                for(let i = 1; i < 20 ; i++) {
+                    console.log(drink[0]["strIngredient" + i]);
+                    if(drink[0]["strIngredient" + i]) {
+                        output[i] = {
+                            "type":"card",
+                            "title": drink[0]["strIngredient"+i],
+                            "text": drink[0]["strMeasure"+i]
+                        }
+                    }
+                }
+            }else {
+                for (let i = 0; i < drink.length; i++) {
+                    output[i] = {
+                        "type": "card",
+                        "title": drink[i].strDrink,
+                        "image": drink[i].strDrinkThumb,
+                        "buttons": [{
+                            "type": "button",
+                            "text": "Voir en détail",
+                            "value": "Detail " + drink[i].idDrink
+                        }]
+                    };
+                }
             }
             console.log(output[0]);
             console.log(output);
