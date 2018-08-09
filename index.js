@@ -175,7 +175,7 @@ server.post('/reservation', function (request, response) {
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
     let date = moment(param["ggwg/datetime"]).format("D/M");
-    let text = "Nous vous confirmons l'enregistrement de votre réservation"
+    let text = "Nous vous confirmons l'enregistrement de votre réservation "
                 +(param["typeResa"] == "Restaurant" ? "d'une table pour "
                  : param["typeResa"] == "Hotel" ? "d'une chambre pour "
                  : param["typeResa"] == "Visio" ? "d'une salle de visio pour "
@@ -189,7 +189,34 @@ server.post('/reservation', function (request, response) {
     }));
 })
 
+server.post('/support', function (request, response) {
+    var param = request.body.intent.inputs;
+    console.log("List of your entities : ");
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    let text = "Nous vous confirmons l'enregistrement de votre problème "
+                +(param["typeMateriel"] != "Ordinateur" ? "concernant un périphérique "
+                 : param["typeMateriel"] ? "concernant votre ordinateur " 
+                 : param["typeService"] == "Connection" ? "concernant la connexion à un serivce "
+                 : param["typeService"] ? "concernant l'accés à un serivce " : ".");
 
+    response.setHeader('Content-Type', 'application/json');
+    response.send(JSON.stringify({
+        "speech": text,
+        "posts": []
+    }));
+})
+
+server.post('/movie', function (request, response) {
+    var param = request.body.intent.inputs;
+    console.log("List of your entities : ");
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    let text = "";
+    response.setHeader('Content-Type', 'application/json');
+    response.send(JSON.stringify({
+        "speech": text,
+        "posts": []
+    }));
+})
 
 
 
