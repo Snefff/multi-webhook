@@ -196,7 +196,7 @@ server.post('/support', function (request, response) {
     let text = "Nous vous confirmons l'enregistrement de votre problème "
                 +(param["typeMateriel"] != "Ordinateur" ? "concernant un périphérique "
                  : param["typeMateriel"] ? "concernant votre ordinateur " 
-                 : param["typeService"] == "Connection" ? "concernant la connexion à un serivce "
+                 : param["typeService"] == "connecter" ? "concernant la connexion à un serivce "
                  : param["typeService"] ? "concernant l'accés à un serivce " : ".");
 
     response.setHeader('Content-Type', 'application/json');
