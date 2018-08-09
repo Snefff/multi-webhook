@@ -3,6 +3,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 var unirest = require("unirest");
+var moment = require("moment");
+
 
 var port = process.env.PORT || 8080;
 
@@ -172,14 +174,14 @@ server.post('/reservation', function (request, response) {
     var param = request.body.intent.inputs;
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    let date = moment(param["ggwg/datetime"]).format("D/M");
     let text = "Nous vous confirmons l'enregistrement de votre réservation"
                 +(param["typeResa"] == "Restaurant" ? "d'une table pour "
                  : param["typeResa"] == "Hotel" ? "d'une chambre pour "
                  : param["typeResa"] == "Visio" ? "d'une salle de visio pour "
                  : "pour ")
-                +param["ggwg/number"] + " personnes pour le " + param["ggwp/datetime"]
-                +(param["typeResa"] != "Restaurant" ? " pendant" + param["ggwg/duration"]+"." : ".");
-                
+                +param["ggwg/number"] + " personnes pour le " + date;
+    console.log(date);
     response.setHeader('Content-Type', 'application/json');
     response.send(JSON.stringify({
         "speech": text,
