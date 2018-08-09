@@ -194,8 +194,8 @@ server.post('/support', function (request, response) {
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
     let text = "Nous vous confirmons l'enregistrement de votre problème "
-                +(param["typeMateriel"] != "Ordinateur" ? "concernant un périphérique "
-                 : param["typeMateriel"] ? "concernant votre ordinateur " 
+                + (param["typeMateriel"] ? param["typeMateriel"] != "Ordinateur" ? "concernant un périphérique "
+                 : "concernant votre ordinateur " 
                  : param["typeService"] == "connecter" ? "concernant la connexion à un serivce "
                  : param["typeService"] ? "concernant l'accés à un serivce " : ".");
 
