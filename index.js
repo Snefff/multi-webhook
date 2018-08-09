@@ -168,6 +168,28 @@ server.post('/meal', function (request, response) {
     });
 });
 
+server.post('/reservation', function (request, response) {
+    var param = request.body.intent.inputs;
+    console.log("List of your entities : ");
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    let text = "Nous vous confirmons l'enregistrement de votre réservation"
+                +(param["typeResa"] == "Restaurant" ? "d'une table pour "
+                 : param["typeResa"] == "Hotel" ? "d'une chambre pour "
+                 : param["typeResa"] == "Visio" ? "d'une salle de visio pour "
+                 : "pour ")
+                +param["ggwg/number"] + " personnes pour le " + param["ggwp/datetime"]
+                +(param["typeResa"] != "Restaurant" ? " pendant" + param["ggwg/duration"]+"." : ".");
+                
+    response.setHeader('Content-Type', 'application/json');
+    response.send(JSON.stringify({
+        "speech": text,
+        "posts": []
+    }));
+})
+
+
+
+
 
 server.listen(port, function () {
     console.log("Server is up and running...");
