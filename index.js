@@ -180,7 +180,8 @@ server.post('/reservation', function (request, response) {
                  : param["typeResa"] == "Hotel" ? "d'une chambre pour "
                  : param["typeResa"] == "Visio" ? "d'une salle de visio pour "
                  : "pour ")
-                +param["ggwg/number"] + " personnes pour le " + date;
+                +param["ggwg/number"] + " personnes pour le " + date
+                +(param["ggwg/duration"] ? "pendant " + param["ggwg/duration"] : "" );
     console.log(date);
     response.setHeader('Content-Type', 'application/json');
     response.send(JSON.stringify({
@@ -196,7 +197,7 @@ server.post('/support', function (request, response) {
     let text = "Nous vous confirmons l'enregistrement de votre problème "
                 + (param["typeMateriel"] ? param["typeMateriel"] != "Ordinateur" ? "concernant un périphérique "
                  : "concernant votre ordinateur " 
-                 : param["typeService"] ? param["typeService"] != "connecter" ?  "concernant l'accés à un serivce "
+                 : param["typeService"] ? param["typeService"] != "Connection" ?  "concernant l'accés à un serivce "
                  : "concernant la connection à un serivce " : ".");
 
     response.setHeader('Content-Type', 'application/json');
