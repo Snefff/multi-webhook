@@ -27,6 +27,3 @@ Go to [Proximity](https://www.gogowego.com/login)
 - Create your first intent, some training phrases and the default bot response (in case the API is not responding). At the bottom, check Handover to API.
 - Test it! Try your Virtual Assistant and start building it's intelligence using Webhook.
 - Enjoy!
-
-
- 
