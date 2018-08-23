@@ -275,19 +275,20 @@ server.post('/addEntityMovie', function (request, response) {
                 console.log(output[i]);
             }
             var url2 = "https://www.gogowego.com/api/v1/Entities";
-            var resp = unirest("POST",url2);
-            resp.setHeader('authorization','b897fe23-c8f9-4d98-ba28-fef92e99b96c');
-            resp.send(JSON.stringify([{
+            var response = unirest("POST",url2);
+            response.setHeader('authorization','b897fe23-c8f9-4d98-ba28-fef92e99b96c');
+            response.send(JSON.stringify([{
                 "name" : "testGenre",
                 "automaticallyExtensible": false,
                 "useSynonyms" : false,
                 "data" : output
             }]));
-            response.setHeader('content-type','application/json');
+            /*
+            response.setHeader('Content-type','application/json');
             response.send(JSON.stringify({
                 "speech" : "Ca devrait avoir marché",
                 "posts" : []
-            }))
+            }))*/
         }
     })
 })
