@@ -264,6 +264,7 @@ server.post('/addEntityMovie', function (request, response) {
             console.log(res.error);
         } else if (res.body.genres.length > 0) {
             let genre = res.body.genres;
+            let output = Array(genre.length);
             for (let i = 0; i < genre.length; i++) {
                 output[i] = {
                     "value" : genre["id"],
