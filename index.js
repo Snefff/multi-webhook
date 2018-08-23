@@ -82,6 +82,7 @@ server.post('/cocktail', function (request, response) {
                     };
                 }
             }
+            text = param["alcohol"];
             console.log(output[0]);
             console.log(output);
             response.setHeader('Content-Type', 'application/json');
@@ -170,6 +171,42 @@ server.post('/meal', function (request, response) {
     });
 });
 
+server.post('/movie', function (request, response) {
+    var param = request.body.intent.inputs;
+    console.log("List of your entities : ");
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    var url = "https://api.themoviedb.org/discover/movie?"
+    if (param["Genre"]) {
+        url += "with_genre=" + param["Category"];
+    } else if (param["Area"]) {
+        url += "filter.php?a=" + param["Area"];
+    } else if (param["Random meal"]) {
+        url += "random.php";
+    }else if(param["ggwg/number"]) {
+        url += "lookup.php?i=" + param["ggwg/number"];
+    }   
+        var req = unirest("GET", url);
+    console.log(req);
+    req.send("{}");
+    req.end(function (res) {
+        if (res.error) {
+            console.log(res.error);
+            response.setHeader('Content-Type', 'application/json');
+            response.send(JSON.stringify({
+                "speech": "Error. Can you try it again ? ",
+                "posts": []
+            }));
+        } else if (res.body.meals.length > 0) {
+            let text = "";
+            response.setHeader('Content-Type', 'application/json');
+            response.send(JSON.stringify({
+                "speech": text,
+                "posts": []
+            }));
+        }
+    })
+});
+
 server.post('/reservation', function (request, response) {
     var param = request.body.intent.inputs;
     console.log("List of your entities : ");
@@ -207,17 +244,7 @@ server.post('/support', function (request, response) {
     }));
 })
 
-server.post('/movie', function (request, response) {
-    var param = request.body.intent.inputs;
-    console.log("List of your entities : ");
-    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
-    let text = "";
-    response.setHeader('Content-Type', 'application/json');
-    response.send(JSON.stringify({
-        "speech": text,
-        "posts": []
-    }));
-})
+
 
 
 
