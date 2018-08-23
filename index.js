@@ -268,12 +268,13 @@ server.post('/addEntityMovie', function (request, response) {
                 output[i] = {
                     "value" : genre["id"],
                     "synonyms" : [
-                        genre.name
+                        genre["name"]
                     ]
                 };
+                console.log(output[i]);
             }
             var url2 = "https://www.gogowego.com/api/v1/Entities";
-            var resp = unirest("POST",url);
+            var resp = unirest("POST",url2);
             resp.setHeader('authorization','b897fe23-c8f9-4d98-ba28-fef92e99b96c');
             resp.send(JSON.stringify([{
                 "name" : "testGenre",
