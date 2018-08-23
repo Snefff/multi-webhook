@@ -262,7 +262,7 @@ server.post('/addEntityMovie', function (request, response) {
     req.end(function (res) {
         if (res.error) {
             console.log(res.error);
-        } else if (res.body.genres > 0) {
+        } else if (res.body.genres.length > 0) {
             let genre = res.body.genres;
             for (let i = 0; i < genre.length; i++) {
                 output[i] = {
