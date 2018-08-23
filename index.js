@@ -177,14 +177,12 @@ server.post('/movie', function (request, response) {
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
     var url = "https://api.themoviedb.org/discover/movie?"
     if (param["Genre"]) {
-        url += "with_genre=" + param["Category"];
-    } else if (param["Area"]) {
-        url += "filter.php?a=" + param["Area"];
-    } else if (param["Random meal"]) {
-        url += "random.php";
-    }else if(param["ggwg/number"]) {
-        url += "lookup.php?i=" + param["ggwg/number"];
-    }   
+        url += "with_genre=" + param["Genre"];
+    } else if (param["Actors"]) {
+        url += "with_cast=" + param["Actors"];
+    } else if (param["origine"]) {
+        url += "region";
+    }
         var req = unirest("GET", url);
     console.log(req);
     req.send("{}");
@@ -197,7 +195,19 @@ server.post('/movie', function (request, response) {
                 "posts": []
             }));
         } else if (res.body.meals.length > 0) {
-            let text = "";
+            let text = "Voici les films correspondants : ";
+            for (let i = 0; i < drink.length; i++) {
+                output[i] = {
+                    "type": "card",
+                    "title": drink[i].strDrink,
+                    "image": drink[i].strDrinkThumb,
+                    "buttons": [{
+                        "type": "button",
+                        "text": "Voir en détail",
+                        "value": "Detail " + drink[i].idDrink
+                    }]
+                };
+            }
             response.setHeader('Content-Type', 'application/json');
             response.send(JSON.stringify({
                 "speech": text,
@@ -244,7 +254,37 @@ server.post('/support', function (request, response) {
     }));
 })
 
-
+server.post('/addEntityMovie', function (request, response) {
+    var url = "https://api.themoviedb.org/3/genre/movie/list?api_key=749c70b3747805b5581f8d03f0479065";
+    var req = unirest("GET", url);
+    console.log(req);
+    req.send("{}");
+    req.end(function (res) {
+        if (res.error) {
+            console.log(res.error);
+        } else if (res.body.genres > 0) {
+            let genre = res.body.genres;
+            for (let i = 0; i < genre.length; i++) {
+                output[i] = {
+                    "value" : genre["id"],
+                    "synonyms" : [
+                        genre.name
+                    ]
+                };
+            }
+            var url2 = "https://www.gogowego.com/api/v1/Entities";
+            var resp = unirest("POST",url);
+            resp.send(JSON.stringify({}))
+            response.setHeader('authorization','b897fe23-c8f9-4d98-ba28-fef92e99b96c');
+            response.send(JSON.stringify([{
+                "name" : "testGenre",
+                "automaticallyExtensible": false,
+                "useSynonyms" : false,
+                "data" : output
+            }]));
+        }
+    })
+})
 
 
 
