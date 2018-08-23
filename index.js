@@ -265,11 +265,12 @@ server.post('/addEntityMovie', function (request, response) {
         } else if (res.body.genres.length > 0) {
             let genre = res.body.genres;
             let output = Array(genre.length);
+            console.log(genre[0]);
             for (let i = 0; i < genre.length; i++) {
                 output[i] = {
-                    "value" : genre["id"],
+                    "value" : genre[i].id,
                     "synonyms" : [
-                        genre["name"]
+                        genre[i].name
                     ]
                 };
                 console.log(output[i]);
