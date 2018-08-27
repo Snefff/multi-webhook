@@ -303,7 +303,7 @@ server.post('/getNews', function (request, response) {
     var url = "https://newsapi.org/v2/"
         + (request.body.intent.inputs['top-headline'] != ""
             || request.body.intent.inputs['source'] == "" ? "top-headlines" : "everything")
-        + "?apiKey=" + apiKey;
+        + "?apiKey=dc7a99af9cc6432e9791af434a6f1328";
     var req = unirest("GET", url);
     req.query({
         "pageSize": "4",
