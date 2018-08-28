@@ -380,10 +380,10 @@ server.post('/SE', function (request, response) {
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     if (intent == "liste") {
-        csvName = param["Lieus"] + ".csv";
+        csvName = param["Lieus"];
         col = "Nom";
         csv()
-            .fromFile(csvName)
+            .fromFile(csvName+ ".csv")
             .then((jsonObj) => {
                 console.log(jsonObj);
                 text = "Voici la liste des " + csvName;
