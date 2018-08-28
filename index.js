@@ -64,7 +64,7 @@ server.post('/cocktail', function (request, response) {
                         output[i] = {
                             "type":"card",
                             "title": drink[0]["strIngredient"+i],
-                            "text": drink[0]["strMeasure"+i]
+                            "text": (drink[0]["strMeasure"+i] == "\n" ? "-" : drink[0]["strMeasure"+i])
                         }
                     }
                 }
