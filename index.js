@@ -386,7 +386,7 @@ server.post('/SE', function (request, response) {
             .fromFile(csvName+ ".csv")
             .then((jsonObj) => {
                 console.log(jsonObj);
-                text = "Voici la liste des " + csvName;
+                text = "Voici la liste des " + csvName +"s :";
                 jsonObj.forEach(function (elt) {
                     output.push(
                         {
