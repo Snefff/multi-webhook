@@ -2,6 +2,7 @@
 'use strict';
 const express = require('express');
 const bodyParser = require('body-parser');
+const csv = require('csvtojson')
 var unirest = require("unirest");
 var moment = require("moment");
 
@@ -26,10 +27,10 @@ server.post('/cocktail', function (request, response) {
         url += "random.php";
     } else if (param["Cocktail name"]) {
         url += "/search.php?s=" + param["Cocktail name"];
-    }else if (param["ggwg/number"]) {
+    } else if (param["ggwg/number"]) {
         url += "/lookup.php?i=" + param["ggwg/number"];
     }
-        var req = unirest("GET", url);
+    var req = unirest("GET", url);
     console.log(req);
     req.send("{}");
     req.end(function (res) {
@@ -44,31 +45,31 @@ server.post('/cocktail', function (request, response) {
             let drink = res.body.drinks;
             let output = Array(drink.length);
             let text = "";
-            if(param["alcohol"] || param["Cocktail name"]) {
+            if (param["alcohol"] || param["Cocktail name"]) {
                 text += "Voici les cocktails correspondants : \n"
-            }else if(param["ggwg/number"]) {
+            } else if (param["ggwg/number"]) {
                 text += "Voici les détail du cocktail :\n"
-            }else  {
+            } else {
                 text += "Voici un cocktail que tu devrais tester !\n"
             }
-            if(param["ggwg/number"]) {
+            if (param["ggwg/number"]) {
                 output[0] = {
                     "type": "card",
-                        "title": drink[0].strDrink,
-                        "image": drink[0].strDrinkThumb,
-                        "text" : drink[0].strInstructions,
+                    "title": drink[0].strDrink,
+                    "image": drink[0].strDrinkThumb,
+                    "text": drink[0].strInstructions,
                 }
-                for(let i = 1; i < 20 ; i++) {
+                for (let i = 1; i < 20; i++) {
                     console.log(drink[0]["strIngredient" + i]);
-                    if(drink[0]["strIngredient" + i]) {
+                    if (drink[0]["strIngredient" + i]) {
                         output[i] = {
-                            "type":"card",
-                            "title": drink[0]["strIngredient"+i],
-                            "text": (drink[0]["strMeasure"+i] == "\n" ? "-" : drink[0]["strMeasure"+i])
+                            "type": "card",
+                            "title": drink[0]["strIngredient" + i],
+                            "text": (drink[0]["strMeasure" + i] == "\n" ? "-" : drink[0]["strMeasure" + i])
                         }
                     }
                 }
-            }else {
+            } else {
                 for (let i = 0; i < drink.length; i++) {
                     output[i] = {
                         "type": "card",
@@ -105,10 +106,10 @@ server.post('/meal', function (request, response) {
         url += "filter.php?a=" + param["Area"];
     } else if (param["Random meal"]) {
         url += "random.php";
-    }else if(param["ggwg/number"]) {
+    } else if (param["ggwg/number"]) {
         url += "lookup.php?i=" + param["ggwg/number"];
-    }   
-        var req = unirest("GET", url);
+    }
+    var req = unirest("GET", url);
     console.log(req);
     req.send("{}");
     req.end(function (res) {
@@ -123,31 +124,31 @@ server.post('/meal', function (request, response) {
             let meal = res.body.meals;
             let output = Array(meal.length);
             let text = "";
-            if(param["Category"] || param["Area"]) {
-                text +="Voici les recettes correspondantes : \n";
-            }else if(param["ggwg/number"]){
+            if (param["Category"] || param["Area"]) {
+                text += "Voici les recettes correspondantes : \n";
+            } else if (param["ggwg/number"]) {
                 text += "Voici le détail de la recette : \n";
-            }else {
+            } else {
                 text += "Voici une recette que tu devrais tester !\n";
             }
-            if(param["ggwg/number"]) {
+            if (param["ggwg/number"]) {
                 output[0] = {
                     "type": "card",
-                        "title": meal[0].strMeal,
-                        "image": meal[0].strMealThumb,
-                        "text" : meal[0].strInstructions,
+                    "title": meal[0].strMeal,
+                    "image": meal[0].strMealThumb,
+                    "text": meal[0].strInstructions,
                 }
-                for(let i = 1; i < 20 ; i++) {
+                for (let i = 1; i < 20; i++) {
                     console.log(meal[0]["strIngredient" + i]);
-                    if(meal[0]["strIngredient" + i]) {
+                    if (meal[0]["strIngredient" + i]) {
                         output[i] = {
-                            "type":"card",
-                            "title": meal[0]["strIngredient"+i],
-                            "text": meal[0]["strMeasure"+i]
+                            "type": "card",
+                            "title": meal[0]["strIngredient" + i],
+                            "text": meal[0]["strMeasure" + i]
                         }
                     }
                 }
-            }else {
+            } else {
                 for (let i = 0; i < meal.length; i++) {
                     output[i] = {
                         "type": "card",
@@ -174,7 +175,7 @@ server.post('/meal', function (request, response) {
 server.post('/movie', function (request, response) {
     var param = request.body.intent.inputs;
     console.log("List of your entities : ");
-    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     var url = "https://api.themoviedb.org/discover/movie?"
     if (param["Genre"]) {
         url += "with_genre=" + param["Genre"];
@@ -183,7 +184,7 @@ server.post('/movie', function (request, response) {
     } else if (param["origine"]) {
         url += "region";
     }
-        var req = unirest("GET", url);
+    var req = unirest("GET", url);
     console.log(req);
     req.send("{}");
     req.end(function (res) {
@@ -220,15 +221,15 @@ server.post('/movie', function (request, response) {
 server.post('/reservation', function (request, response) {
     var param = request.body.intent.inputs;
     console.log("List of your entities : ");
-    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     let date = moment(param["ggwg/datetime"]).format("D/M");
     let text = "Nous vous confirmons l'enregistrement de votre réservation "
-                +(param["typeResa"] == "Restaurant" ? "d'une table pour "
-                 : param["typeResa"] == "Hotel" ? "d'une chambre pour "
-                 : param["typeResa"] == "Visio" ? "d'une salle de visio pour "
-                 : "pour ")
-                +param["ggwg/number"] + " personnes pour le " + date
-                +(param["ggwg/duration"] ? "pendant " + param["ggwg/duration"] : "" );
+        + (param["typeResa"] == "Restaurant" ? "d'une table pour "
+            : param["typeResa"] == "Hotel" ? "d'une chambre pour "
+                : param["typeResa"] == "Visio" ? "d'une salle de visio pour "
+                    : "pour ")
+        + param["ggwg/number"] + " personnes pour le " + date
+        + (param["ggwg/duration"] ? "pendant " + param["ggwg/duration"] : "");
     console.log(date);
     response.setHeader('Content-Type', 'application/json');
     response.send(JSON.stringify({
@@ -240,12 +241,12 @@ server.post('/reservation', function (request, response) {
 server.post('/support', function (request, response) {
     var param = request.body.intent.inputs;
     console.log("List of your entities : ");
-    Object.keys(param).forEach(element => { console.log(element + " - " + param[element])});
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     let text = "Nous vous confirmons l'enregistrement de votre problème "
-                + (param["typeMateriel"] ? param["typeMateriel"] != "Ordinateur" ? "concernant un périphérique "
-                 : "concernant votre ordinateur " 
-                 : param["typeService"] ? param["typeService"] != "Connection" ?  "concernant l'accés à un serivce "
-                 : "concernant la connection à un serivce " : ".");
+        + (param["typeMateriel"] ? param["typeMateriel"] != "Ordinateur" ? "concernant un périphérique "
+            : "concernant votre ordinateur "
+            : param["typeService"] ? param["typeService"] != "Connection" ? "concernant l'accés à un serivce "
+                : "concernant la connection à un serivce " : ".");
 
     response.setHeader('Content-Type', 'application/json');
     response.send(JSON.stringify({
@@ -268,30 +269,30 @@ server.post('/addEntityMovie', function (request, response) {
             console.log(genre[0]);
             for (let i = 0; i < genre.length; i++) {
                 output[i] = {
-                    "value" : genre[i].id,
-                    "synonyms" : [
+                    "value": genre[i].id,
+                    "synonyms": [
                         genre[i].name
                     ]
                 };
                 console.log(output[i]);
             }
             var url2 = "https://www.gogowego.com/api/v1/Entities";
-            var resp = unirest("POST",url2);
+            var resp = unirest("POST", url2);
             resp.headers({
                 'Authorization': 'Bearer b897fe23-c8f9-4d98-ba28-fef92e99b96c',
                 'Content-type': 'application/json'
-              })
+            })
             resp.send(JSON.stringify([{
-                "name" : "testGenre",
+                "name": "testGenre",
                 "automatically_extensible": false,
-                "use_synonyms" : false,
-                "data" : output
+                "use_synonyms": false,
+                "data": output
             }]));
             console.log(resp);
-            response.setHeader('Content-type','application/json');
+            response.setHeader('Content-type', 'application/json');
             response.send(JSON.stringify({
-                "speech" : "Ca devrait avoir marché",
-                "posts" : []
+                "speech": "Ca devrait avoir marché",
+                "posts": []
             }))
         }
     })
@@ -319,8 +320,8 @@ server.post('/getNews', function (request, response) {
             req.query({
                 "country": request.body.intent.inputs['language'] || "fr"
             })
-        : 
-            req.query({
+        :
+        req.query({
             "sources": request.body.intent.inputs['source'],
             "language": request.body.intent.inputs['language'] || "fr"
         }));
@@ -367,6 +368,95 @@ server.post('/getNews', function (request, response) {
     });
 });
 
+server.post('/SE', function (request, response) {
+    var csvName = "";
+    var col = "";
+    var row = "";
+    var text = "";
+    var output;
+    var intent = request.body.intent.name;
+    var param = request.body.intent.inputs;
+    console.log("List of your entities : ");
+    Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
+    if (intent == "liste") {
+        csvName = param["Lieus"];
+        col = "Nom";
+        csv()
+            .fromFile(csvName)
+            .then((jsonObj) => {
+                console.log(jsonObj);
+                text = "Voici la liste des " + csvName;
+                jsonObj.forEach(function (elt) {
+                    output.push(
+                        {
+                            "type": "card",
+                            "title": elt[col],
+                            "image": elt["LienImage"],
+                            "buttons": [{
+                                "type": "button",
+                                "text": "Horaires",
+                                "value": elt["horaires"]
+                            },
+                            {
+                                "type": "button",
+                                "text": "Tarifs",
+                                "value": elt["tarifs"]
+                            },
+                            {
+                                "type": "button",
+                                "text": "Adresse",
+                                "value": elt["adresse"]
+                            },
+                            {
+                                "type": "button",
+                                "text": "Contact",
+                                "value": elt["contact"]
+                            },
+                            {
+                                "type": "link",
+                                "text": "Site web",
+                                "value": elt["website"]
+                            }]
+                        }
+                    )
+                })
+                response.setHeader('Content-Type', 'application/json');
+                response.send(JSON.stringify({
+                    "speech": text,
+                    "posts": output
+                }));
+            })
+    } else {
+        col = intent;
+        row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
+        csvName = param["BibliothequeName"] ? "Bibliotheque"
+            : param["museumName"] ? "Museum"
+                : param["piscineName"] ? "Piscine" : "Error";
+        csv()
+            .fromFile(csvName)
+            .then((jsonObj) => {
+                console.log(jsonObj);
+                jsonObj.forEach(function (elt) {
+                  if(elt["nom"] == row) {
+                      text = "Voici les informations :"
+                      output = {
+                        "type": "card",
+                        "title": col,
+                        "image": elt["LienImage"],
+                        "text": elt[col]
+                      }
+                  }      
+                })
+                response.setHeader('Content-Type', 'application/json');
+                response.send(JSON.stringify({
+                    "speech": text,
+                    "posts": output
+                }));
+            })
+    }
+
+
+})
 
 server.listen(port, function () {
     console.log("Server is up and running...");
