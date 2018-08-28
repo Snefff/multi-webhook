@@ -15,7 +15,8 @@
     "moment": "^2.19.3",
     "bluebird": "^3.5.1",
     "lodash": "^4.17.10",
-    "strip-bom": "^3.0.0"
+    "strip-bom": "^3.0.0",
+    "csvtojson": "^2.0.8"
   },
   "engines": {
     "node": "8.9.1"
