@@ -374,6 +374,7 @@ server.post('/SE', function (request, response) {
     var row = "";
     var text = "";
     var output;
+    console.log(request.body.intent);
     var intent = request.body.intent.name;
     var param = request.body.intent.inputs;
     console.log("List of your entities : ");
