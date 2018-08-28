@@ -24,6 +24,9 @@ Go to [Proximity](https://www.gogowego.com/login)
 - Login
 - Create your own Virtual Assistant
 - In parameters, go to Webhook tab and paste your API's URL endpoint. Example of Webhook URL  : https://webhook-proximity-example.herokuapp.com/example
-- Create your first intent, some training phrases and the default bot response (in case the API is not responding). At the bottom, check Handover to API.
+- Create your first intent and some training phrases. At the bottom, check Handover to API.
 - Test it! Try your Virtual Assistant and start building it's intelligence using Webhook.
 - Enjoy!
+
+
+ 
