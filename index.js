@@ -380,7 +380,7 @@ server.post('/SE', function (request, response) {
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     if (intent == "liste") {
-        csvName = param["Lieus"];
+        csvName = param["Lieus"] + ".csv";
         col = "Nom";
         csv()
             .fromFile(csvName)
@@ -430,9 +430,9 @@ server.post('/SE', function (request, response) {
     } else {
         col = intent;
         row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
-        csvName = param["BibliothequeName"] ? "Bibliotheque"
+        csvName = (param["BibliothequeName"] ? "Bibliotheque"
             : param["museumName"] ? "Museum"
-                : param["piscineName"] ? "Piscine" : "Error";
+                : param["piscineName"] ? "Piscine" : "Error") + ".csv";
         csv()
             .fromFile(csvName)
             .then((jsonObj) => {
