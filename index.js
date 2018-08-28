@@ -373,7 +373,7 @@ server.post('/SE', function (request, response) {
     var col = "";
     var row = "";
     var text = "";
-    var output;
+    var output = new Array();
     console.log(request.body);
     var intent = request.body.intent.name;
     var param = request.body.intent.inputs;
