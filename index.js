@@ -374,28 +374,26 @@ server.post('/SE', function (request, response) {
     var row = "";
     var text = "";
     var output = new Array();
-    console.log(request.body);
     var intent = request.body.intent.name;
     var param = request.body.intent.inputs;
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     if (intent == "liste") {
         csvName = param["Lieus"];
-        col = "Nom";
+        col = "nom";
         csv({
             noheader: false,
             delimiter: [";"]
         })
             .fromFile(csvName + ".csv")
             .then((jsonObj) => {
-                console.log(jsonObj);
                 text = "Voici la liste des " + csvName + "s :";
                 jsonObj.forEach(function (elt) {
                     output.push(
                         {
                             "type": "card",
                             "title": elt[col],
-                            "image": elt["LienImage"],
+                            "image": elt["lienImage"],
                             "buttons": [{
                                 "type": "button",
                                 "text": "Horaires",
