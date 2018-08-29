@@ -376,6 +376,7 @@ server.post('/SE', function (request, response) {
     var output = new Array();
     var intent = request.body.intent.name;
     var param = request.body.intent.inputs;
+    console.log("Intent found : " + intent);
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     if (intent == "liste") {
@@ -423,55 +424,63 @@ server.post('/SE', function (request, response) {
         var name = (param["BibliothequeName"] ? "bibliotheque"
             : param["museumName"] ? "musee"
                 : param["piscineName"] ? "piscine" : "Error");
-        col = intent;
-        row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
-        csvName = name + ".csv";
-        csv({
-            noheader: false,
-            delimiter: [";"]
-        })
-            .fromFile(csvName)
-            .then((jsonObj) => {
-                console.log(jsonObj);
-                jsonObj.forEach(function (elt) {
-                    if (elt["nom"] == row) {
-                        if (col = "tarifs") {
-                            text = "Voici les tarifs :"
-                            output.push({
-                                "type": "card",
-                                "title": col,
-                                "image": elt["lienImage"],
-                                "text": elt[col],
-                                "button": [{
-                                    "type": "link",
-                                    "text": "plus d'info tarifs",
-                                    "value": elt["lienTarif"]
-                                }]
-                            })
-                            output.push({
-                                "type": "button",
-                                "text": "Retour",
-                                "value": "liste " + name
-                            })
-                        } else {
-                            text = "Voici les informations :"
-                            output.push({
-                                "type": "card",
-                                "title": col,
-                                "image": elt["lienImage"],
-                                "text": elt[col]
-                            })
-                        }
-                    }
-                })
-                response.setHeader('Content-Type', 'application/json');
-                response.send(JSON.stringify({
-                    "speech": text,
-                    "posts": output
-                }));
+        if (name == "Error") {
+            text = "Une erreur est survenue, veuillez réessayer plus tard.."
+            response.setHeader('Content-Type', 'application/json');
+            response.send(JSON.stringify({
+                "speech": text,
+                "posts": []
+            }));
+        } else {
+            col = intent;
+            row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
+            csvName = name + ".csv";
+            csv({
+                noheader: false,
+                delimiter: [";"]
             })
+                .fromFile(csvName)
+                .then((jsonObj) => {
+                    console.log(jsonObj);
+                    jsonObj.forEach(function (elt) {
+                        if (elt["nom"] == row) {
+                            if (col = "tarifs") {
+                                text = "Voici les tarifs :"
+                                output.push({
+                                    "type": "card",
+                                    "title": col,
+                                    "image": elt["lienImage"],
+                                    "text": elt[col],
+                                    "button": [{
+                                        "type": "link",
+                                        "text": "plus d'info tarifs",
+                                        "value": elt["lienTarif"]
+                                    }]
+                                })
+                                output.push({
+                                    "type": "button",
+                                    "text": "Retour",
+                                    "value": "liste " + name
+                                })
+                            } else {
+                                text = "Voici les informations :"
+                                output.push({
+                                    "type": "card",
+                                    "title": col,
+                                    "image": elt["lienImage"],
+                                    "text": elt[col]
+                                })
+                            }
+                        }
+                    })
+                    response.setHeader('Content-Type', 'application/json');
+                    response.send(JSON.stringify({
+                        "speech": text,
+                        "posts": output
+                    }));
+                })
+        }
     }
-
 
 })
 
