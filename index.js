@@ -413,6 +413,7 @@ server.post('/SE', function (request, response) {
                         }
                     )
                 })
+                console.log(output);
                 response.setHeader('Content-Type', 'application/json');
                 response.send(JSON.stringify({
                     "speech": text,
