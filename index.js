@@ -383,12 +383,13 @@ server.post('/SE', function (request, response) {
         csvName = param["Lieus"];
         col = "Nom";
         csv({
-            noheader: false
+            noheader: false,
+            delimiter: [";"]
         })
-            .fromFile(csvName+ ".csv")
+            .fromFile(csvName + ".csv")
             .then((jsonObj) => {
                 console.log(jsonObj);
-                text = "Voici la liste des " + csvName +"s :";
+                text = "Voici la liste des " + csvName + "s :";
                 jsonObj.forEach(function (elt) {
                     output.push(
                         {
@@ -435,20 +436,23 @@ server.post('/SE', function (request, response) {
         csvName = (param["BibliothequeName"] ? "Bibliotheque"
             : param["museumName"] ? "Museum"
                 : param["piscineName"] ? "Piscine" : "Error") + ".csv";
-        csv()
+        csv({
+            noheader: false,
+            delimiter: [";"]
+        })
             .fromFile(csvName)
             .then((jsonObj) => {
                 console.log(jsonObj);
                 jsonObj.forEach(function (elt) {
-                  if(elt["nom"] == row) {
-                      text = "Voici les informations :"
-                      output = {
-                        "type": "card",
-                        "title": col,
-                        "image": elt["LienImage"],
-                        "text": elt[col]
-                      }
-                  }      
+                    if (elt["nom"] == row) {
+                        text = "Voici les informations :"
+                        output = {
+                            "type": "card",
+                            "title": col,
+                            "image": elt["LienImage"],
+                            "text": elt[col]
+                        }
+                    }
                 })
                 response.setHeader('Content-Type', 'application/json');
                 response.send(JSON.stringify({
