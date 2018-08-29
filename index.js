@@ -402,13 +402,13 @@ server.post('/SE', function (request, response) {
                             },
                             {
                                 "type": "button",
-                                "text": "Tarifs",
-                                "value": "tarifs " + elt[col]
+                                "text": "Adresse",
+                                "value": "Adresse " + elt[col]
                             },
                             {
                                 "type": "button",
                                 "text": "Plus d'info",
-                                "value": "plus d'info " + elt[col]
+                                "value": "Plus d'info " + elt[col]
                             }]
                         }
                     )
@@ -420,6 +420,85 @@ server.post('/SE', function (request, response) {
                     "posts": output
                 }));
             })
+    } else if (intent == "infos") {
+        var link = "";
+        var name = (param["BibliothequeName"] ? "bibliotheque"
+            : param["museumName"] ? "musee"
+                : param["piscineName"] ? "piscine" : "Error");
+        if (name == "Error") {
+            text = "Une erreur est survenue, veuillez réessayer plus tard.."
+            response.setHeader('Content-Type', 'application/json');
+            response.send(JSON.stringify({
+                "speech": text,
+                "posts": []
+            }));
+        } else {
+            col = "nom";
+            row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
+            csvName = name + ".csv";
+            csv({
+                noheader: false,
+                delimiter: [";"]
+            })
+                .fromFile(csvName)
+                .then((jsonObj) => {
+                    console.log(jsonObj);
+                    jsonObj.forEach(function (elt) {
+                        if (elt["nom"] == row) {
+                            output.push({
+                                "type": "card",
+                                "title": "Horaires",
+                                "image": elt["lienImage"],
+                                "text": elt["horaires"],
+                            })
+                            output.push({
+                                "type": "card",
+                                "title": "Adresse",
+                                "image": elt["lienImage"],
+                                "text": elt["adresse"],
+                            })
+                            output.push({
+                                "type": "card",
+                                "title": "Tarifs",
+                                "image": elt["lienImage"],
+                                "text": elt["tarifs"],
+                                "button": [{
+                                    "type": "link",
+                                    "text": "plus d'info tarifs",
+                                    "value": elt["lienTarif"]
+                                }]
+                            })
+                            output.push({
+                                "type": "card",
+                                "title": "Contact",
+                                "image": elt["lienImage"],
+                                "text": elt["contact"],
+                            })
+                            output.push({
+                                "type": "card",
+                                "title": "Site internet",
+                                "image": elt["lienImage"],
+                                "button": [{
+                                    "type": "link",
+                                    "text": "Accéder au site",
+                                    "value": elt["website"]
+                                }]
+                            })
+                            output.push({
+                                "type": "button",
+                                "text": "Retour",
+                                "value": "liste " + name
+                            })
+                        }
+                    })
+                    console.log(output);
+                    response.setHeader('Content-Type', 'application/json');
+                    response.send(JSON.stringify({
+                        "speech": text,
+                        "posts": output
+                    }));
+                })
+        }
     } else {
         var link = "";
         var name = (param["BibliothequeName"] ? "bibliotheque"
