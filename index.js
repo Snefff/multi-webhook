@@ -421,7 +421,7 @@ server.post('/SE', function (request, response) {
     } else {
         var link = "";
         var name = (param["BibliothequeName"] ? "bibliotheque"
-            : param["museumName"] ? "museum"
+            : param["museumName"] ? "musee"
                 : param["piscineName"] ? "piscine" : "Error");
         col = intent;
         row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
