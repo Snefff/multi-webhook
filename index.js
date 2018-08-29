@@ -382,7 +382,9 @@ server.post('/SE', function (request, response) {
     if (intent == "liste") {
         csvName = param["Lieus"];
         col = "Nom";
-        csv()
+        csv({
+            noheader: false
+        })
             .fromFile(csvName+ ".csv")
             .then((jsonObj) => {
                 console.log(jsonObj);
