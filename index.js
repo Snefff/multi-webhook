@@ -397,27 +397,17 @@ server.post('/SE', function (request, response) {
                             "buttons": [{
                                 "type": "button",
                                 "text": "Horaires",
-                                "value": elt["horaires"]
+                                "value": "horaires " + elt[col]
                             },
                             {
                                 "type": "button",
                                 "text": "Tarifs",
-                                "value": elt["tarifs"]
+                                "value": "tarifs " + elt[col]
                             },
                             {
                                 "type": "button",
-                                "text": "Adresse",
-                                "value": elt["adresse"]
-                            },
-                            {
-                                "type": "button",
-                                "text": "Contact",
-                                "value": elt["contact"]
-                            },
-                            {
-                                "type": "link",
-                                "text": "Site web",
-                                "value": elt["website"]
+                                "text": "Plus d'info",
+                                "value": "plus d'info " + elt[col]
                             }]
                         }
                     )
@@ -429,11 +419,13 @@ server.post('/SE', function (request, response) {
                 }));
             })
     } else {
+        var link = "";
+        var name = (param["BibliothequeName"] ? "bibliotheque"
+            : param["museumName"] ? "museum"
+                : param["piscineName"] ? "piscine" : "Error");
         col = intent;
         row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
-        csvName = (param["BibliothequeName"] ? "Bibliotheque"
-            : param["museumName"] ? "Museum"
-                : param["piscineName"] ? "Piscine" : "Error") + ".csv";
+        csvName = name + ".csv";
         csv({
             noheader: false,
             delimiter: [";"]
@@ -443,12 +435,32 @@ server.post('/SE', function (request, response) {
                 console.log(jsonObj);
                 jsonObj.forEach(function (elt) {
                     if (elt["nom"] == row) {
-                        text = "Voici les informations :"
-                        output = {
-                            "type": "card",
-                            "title": col,
-                            "image": elt["LienImage"],
-                            "text": elt[col]
+                        if (col = "tarifs") {
+                            text = "Voici les tarifs :"
+                            output.push({
+                                "type": "card",
+                                "title": col,
+                                "image": elt["lienImage"],
+                                "text": elt[col],
+                                "button": [{
+                                    "type": "link",
+                                    "text": "plus d'info tarifs",
+                                    "value": elt["lienTarif"]
+                                }]
+                            })
+                            output.push({
+                                "type": "button",
+                                "text": "Retour",
+                                "value": "liste " + name
+                            })
+                        } else {
+                            text = "Voici les informations :"
+                            output.push({
+                                "type": "card",
+                                "title": col,
+                                "image": elt["lienImage"],
+                                "text": elt[col]
+                            })
                         }
                     }
                 })
