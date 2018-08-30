@@ -398,18 +398,15 @@ server.post('/SE', function (request, response) {
                             "image": elt["lienImage"],
                             "buttons": [{
                                 "type": "button",
-                                "text": "Horaires",
-                                "value": "horaires " + elt[col]
+                                "text": "Horaires " + elt[col]
                             },
                             {
                                 "type": "button",
-                                "text": "Adresse",
-                                "value": "Adresse " + elt[col]
+                                "text": "Adresse " + elt[col]
                             },
                             {
                                 "type": "button",
-                                "text": "Plus d'info",
-                                "value": ("Plus d'info " + elt[col])
+                                "text": "Plus d'info " + elt[col]
                             }]
                         }
                     )
@@ -487,8 +484,7 @@ server.post('/SE', function (request, response) {
                             })
                             output.push({
                                 "type": "button",
-                                "text": "Retour",
-                                "value": "liste " + name
+                                "text": "Retour liste " + name
                             })
                         }
                     })
@@ -540,8 +536,7 @@ server.post('/SE', function (request, response) {
                                 })
                                 output.push({
                                     "type": "button",
-                                    "text": "Retour",
-                                    "value": "liste " + name
+                                    "text": "Retour liste " + name
                                 })
                             } else {
                                 text = "Voici les informations :"
