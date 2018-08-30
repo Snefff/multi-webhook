@@ -411,6 +411,7 @@ server.post('/SE', function (request, response) {
                         }
                     )
                 })
+                console.log("-------------- output ---------------");
                 console.log(output);
                 response.setHeader('Content-Type', 'application/json');
                 response.send(JSON.stringify({
@@ -460,7 +461,7 @@ server.post('/SE', function (request, response) {
                                 "title": "Tarifs",
                                 "image": elt["lienImage"],
                                 "text": elt["tarifs"],
-                                "button": [{
+                                "buttons": [{
                                     "type": "link",
                                     "text": "plus d'infos tarifs",
                                     "value": elt["lienTarif"]
@@ -476,7 +477,7 @@ server.post('/SE', function (request, response) {
                                 "type": "card",
                                 "title": "Site internet",
                                 "image": elt["lienImage"],
-                                "button": [{
+                                "buttons": [{
                                     "type": "link",
                                     "text": "Accéder au site",
                                     "value": elt["website"]
@@ -484,6 +485,7 @@ server.post('/SE', function (request, response) {
                             })
                         }
                     })
+                    console.log("-------------- output ---------------");
                     console.log(output);
                     response.setHeader('Content-Type', 'application/json');
                     response.send(JSON.stringify({
@@ -524,7 +526,7 @@ server.post('/SE', function (request, response) {
                                     "title": col,
                                     "image": elt["lienImage"],
                                     "text": elt[col],
-                                    "button": [{
+                                    "buttons": [{
                                         "type": "link",
                                         "text": "plus d'infos tarifs",
                                         "value": elt["lienTarif"]
@@ -542,6 +544,7 @@ server.post('/SE', function (request, response) {
                             }
                         }
                     })
+                    console.log("-------------- output ---------------");
                     console.log(output);
                     response.setHeader('Content-Type', 'application/json');
                     response.send(JSON.stringify({
