@@ -406,7 +406,7 @@ server.post('/SE', function (request, response) {
                             },
                             {
                                 "type": "button",
-                                "text": "Plus d'info " + elt[col]
+                                "text": "Plus d'infos " + elt[col]
                             }]
                         }
                     )
@@ -462,7 +462,7 @@ server.post('/SE', function (request, response) {
                                 "text": elt["tarifs"],
                                 "button": [{
                                     "type": "link",
-                                    "text": "plus d'info tarifs",
+                                    "text": "plus d'infos tarifs",
                                     "value": elt["lienTarif"]
                                 }]
                             })
@@ -481,10 +481,6 @@ server.post('/SE', function (request, response) {
                                     "text": "Accéder au site",
                                     "value": elt["website"]
                                 }]
-                            })
-                            output.push({
-                                "type": "button",
-                                "text": "Retour liste " + name
                             })
                         }
                     })
@@ -530,14 +526,11 @@ server.post('/SE', function (request, response) {
                                     "text": elt[col],
                                     "button": [{
                                         "type": "link",
-                                        "text": "plus d'info tarifs",
+                                        "text": "plus d'infos tarifs",
                                         "value": elt["lienTarif"]
                                     }]
                                 })
-                                output.push({
-                                    "type": "button",
-                                    "text": "Retour liste " + name
-                                })
+
                             } else {
                                 text = "Voici les informations :"
                                 output.push({
