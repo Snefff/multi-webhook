@@ -390,6 +390,7 @@ server.post('/SE', function (request, response) {
             .then((jsonObj) => {
                 text = "Voici la liste des " + csvName + "s :";
                 jsonObj.forEach(function (elt) {
+                    console.log(elt[col]);
                     output.push(
                         {
                             "type": "card",
@@ -408,7 +409,7 @@ server.post('/SE', function (request, response) {
                             {
                                 "type": "button",
                                 "text": "Plus d'info",
-                                "value": "Plus d'info " + elt[col]
+                                "value": ("Plus d'info " + elt[col])
                             }]
                         }
                     )
