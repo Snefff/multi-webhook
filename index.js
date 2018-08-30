@@ -432,6 +432,7 @@ server.post('/SE', function (request, response) {
                 "posts": []
             }));
         } else {
+            text = "Voici les infos :";
             col = "nom";
             row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
             csvName = name + ".csv";
