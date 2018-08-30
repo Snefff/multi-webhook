@@ -537,7 +537,7 @@ server.post('/SE', function (request, response) {
                     console.log(jsonObj);
                     jsonObj.forEach(function (elt) {
                         if (elt["nom"] == row) {
-                            if (col = "tarifs") {
+                            if (col == "tarifs") {
                                 text = "Voici les tarifs :"
                                 if (ok) {
                                     output.push({
