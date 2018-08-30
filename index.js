@@ -420,10 +420,12 @@ server.post('/SE', function (request, response) {
                 }));
             })
     } else if (intent == "infos") {
+        var ok = false;
         var link = "";
         var name = (param["BibliothequeName"] ? "bibliotheque"
             : param["museumName"] ? "musee"
                 : param["piscineName"] ? "piscine" : "Error");
+        ok = param["piscineName"] ? true : false;
         if (name == "Error") {
             text = "Une erreur est survenue, veuillez réessayer plus tard.."
             response.setHeader('Content-Type', 'application/json');
@@ -457,17 +459,30 @@ server.post('/SE', function (request, response) {
                                 "image": elt["lienImage"],
                                 "text": elt["adresse"],
                             })
-                            output.push({
-                                "type": "card",
-                                "title": "Tarifs",
-                                "image": elt["lienImage"],
-                                "text": elt["tarifs"],
-                                "buttons": [{
-                                    "type": "link",
-                                    "text": "plus d'infos tarifs",
-                                    "value": elt["lienTarif"]
-                                }]
-                            })
+                            if (ok) {
+                                output.push({
+                                    "type": "card",
+                                    "title": "Tarifs",
+                                    "image": elt["lienImage"],
+                                    "text": elt["tarifs"],
+                                    "buttons": [{
+                                        "type": "link",
+                                        "text": "plus d'infos tarifs",
+                                        "value": elt["lienTarif"]
+                                    }]
+                                })
+                            } else {
+                                output.push({
+                                    "type": "card",
+                                    "title": "Tarifs",
+                                    "image": elt["lienImage"],
+                                    "buttons": [{
+                                        "type": "link",
+                                        "text": "plus d'infos tarifs",
+                                        "value": elt["tarifs"]
+                                    }]
+                                })
+                            }
                             output.push({
                                 "type": "card",
                                 "title": "Contact",
@@ -496,10 +511,12 @@ server.post('/SE', function (request, response) {
                 })
         }
     } else {
+        var ok = false;
         var link = "";
         var name = (param["BibliothequeName"] ? "bibliotheque"
             : param["museumName"] ? "musee"
                 : param["piscineName"] ? "piscine" : "Error");
+        ok = param["piscineName"] || param["BibliothequeName"] ? true : false;
         if (name == "Error") {
             text = "Une erreur est survenue, veuillez réessayer plus tard.."
             response.setHeader('Content-Type', 'application/json');
@@ -522,18 +539,26 @@ server.post('/SE', function (request, response) {
                         if (elt["nom"] == row) {
                             if (col = "tarifs") {
                                 text = "Voici les tarifs :"
-                                output.push({
-                                    "type": "card",
-                                    "title": col,
-                                    "image": elt["lienImage"],
-                                    "text": elt[col],
-                                    "buttons": [{
-                                        "type": "link",
-                                        "text": "plus d'infos tarifs",
-                                        "value": elt["lienTarif"]
-                                    }]
-                                })
-
+                                if (ok) {
+                                    output.push({
+                                        "type": "card",
+                                        "title": "Tarifs",
+                                        "image": elt["lienImage"],
+                                        "text": elt["tarifs"],
+                                        "buttons": [{
+                                            "type": "link",
+                                            "text": "plus d'infos tarifs",
+                                            "value": elt["lienTarif"]
+                                        }]
+                                    })
+                                } else {
+                                    output.push({
+                                        "type": "card",
+                                        "title": "Tarifs",
+                                        "image": elt["lienImage"],
+                                        "text": elt["tarifs"],
+                                    })
+                                }
                             } else {
                                 text = "Voici les informations :"
                                 output.push({
