@@ -394,7 +394,7 @@ server.post('/SE', function (request, response) {
     var output = new Array();
     var intent = request.body.intent && request.body.intent.name;
     var param = request.body.intent &&  request.body.intent.inputs;
-    intent.replace('.','_');
+    intent = intent.replace('.','_');
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
     param && Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
@@ -413,7 +413,7 @@ server.post('/SE', function (request, response) {
                     output.push(
                         {
                             "type": "card",
-                            "title": elt[col],
+                            "title": elt[col].replace("Lieux_",""),
                             "image": elt[CSV_PICTURE],
                             "buttons": [{
                                 "type": "button",
