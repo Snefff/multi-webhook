@@ -425,7 +425,7 @@ server.post('/SE', function (request, response) {
         var name = (param["BibliothequeName"] ? "bibliotheque"
             : param["museumName"] ? "musee"
                 : param["piscineName"] ? "piscine" : "Error");
-        ok = param["piscineName"] ? true : false;
+        ok = param["piscineName"] || param["BibliothequeName"] ? true : false;
         if (name == "Error") {
             text = "Une erreur est survenue, veuillez réessayer plus tard.."
             response.setHeader('Content-Type', 'application/json');
@@ -513,10 +513,10 @@ server.post('/SE', function (request, response) {
     } else {
         var ok = false;
         var link = "";
-        var name = (param["BibliothequeName"] ? "bibliotheque"
-            : param["museumName"] ? "musee"
-                : param["piscineName"] ? "piscine" : "Error");
-        ok = param["piscineName"] || param["BibliothequeName"] ? true : false;
+        var name = (param["BibliothequeName"] || param["lieus"]=="bibliotheque" ? "bibliotheque"
+            : param["museumName"] || param["lieus"]=="musee" ? "musee"
+                : param["piscineName"] || param["lieus"]=="piscine" ? "piscine" : "Error");
+        ok = param["piscineName"] || param["BibliothequeName"] || param["lieus"]=="bibliotheque" || param["lieus"]=="piscine" ? true : false;
         if (name == "Error") {
             text = "Une erreur est survenue, veuillez réessayer plus tard.."
             response.setHeader('Content-Type', 'application/json');
@@ -526,7 +526,7 @@ server.post('/SE', function (request, response) {
             }));
         } else {
             col = intent;
-            row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
+            row = param["BibliothequeName"] || param["museumName"] || param["piscineName"] || "all";
             csvName = name + ".csv";
             csv({
                 noheader: false,
@@ -536,7 +536,7 @@ server.post('/SE', function (request, response) {
                 .then((jsonObj) => {
                     console.log(jsonObj);
                     jsonObj.forEach(function (elt) {
-                        if (elt["nom"] == row) {
+                        if (elt["nom"] == row || row == "all") {
                             if (col == "tarifs") {
                                 text = "Voici les tarifs :"
                                 if (ok) {
