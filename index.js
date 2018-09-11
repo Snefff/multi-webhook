@@ -5,6 +5,24 @@ const bodyParser = require('body-parser');
 const csv = require('csvtojson')
 var unirest = require("unirest");
 var moment = require("moment");
+const COLUMN_NAME ="nom";
+const SWIMING_POOL_NAME ="piscineName";
+const LIBRARY_NAME ="BibliothequeName";
+const MUSEUM_NAME = "museumName";
+const LIBRARY ="bibliotheque";
+const SWIMING_POOL ="piscine";
+const PLACES ="Lieus";
+const MUSEUM ="musee";
+const ERROR ="Error";
+const INTENT_LIST ="Lieux.liste";
+const INTENT_MORE_INFO ="Lieux.details";
+const INTENT_PRICING ="Lieux.tarifs";
+const INTENT_SCHEDULE ="Lieux.horaires";
+const INTENT_CONTACT ="Lieux.contact";
+const INTENT_WEBSITE ="Lieux.website";
+const INTENT_LOCATION = "Lieux.adresse";
+const CSV_PICTURE = "lienImage";
+
 
 
 var port = process.env.PORT || 8080;
@@ -374,14 +392,14 @@ server.post('/SE', function (request, response) {
     var row = "";
     var text = "";
     var output = new Array();
-    var intent = request.body.intent.name;
-    var param = request.body.intent.inputs;
+    var intent = request.body.intent && request.body.intent.name;
+    var param = request.body.intent &&  request.body.intent.inputs;
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
-    Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
-    if (intent == "liste") {
-        csvName = param["Lieus"];
-        col = "nom";
+    param && Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
+    if (intent == INTENT_LIST) {
+        csvName = param[PLACES];
+        col = COLUMN_NAME;
         csv({
             noheader: false,
             delimiter: [";"]
@@ -395,7 +413,7 @@ server.post('/SE', function (request, response) {
                         {
                             "type": "card",
                             "title": elt[col],
-                            "image": elt["lienImage"],
+                            "image": elt[CSV_PICTURE],
                             "buttons": [{
                                 "type": "button",
                                 "text": "Horaires " + elt[col]
@@ -419,15 +437,13 @@ server.post('/SE', function (request, response) {
                     "posts": output
                 }));
             })
-    } else if (intent == "infos") {
-        var ok = false;
-        var link = "";
-        var name = (param["BibliothequeName"] ? "bibliotheque"
-            : param["museumName"] ? "musee"
-                : param["piscineName"] ? "piscine" : "Error");
-        ok = param["piscineName"] || param["BibliothequeName"] ? true : false;
-        if (name == "Error") {
-            text = "Une erreur est survenue, veuillez réessayer plus tard.."
+    } else if (intent == INTENT_MORE_INFO) {
+        var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] ? true : false;
+        var name = (param[LIBRARY_NAME] ? LIBRARY
+            : param[MUSEUM_NAME] ? MUSEUM
+                : param[SWIMING_POOL_NAME] ? SWIMING_POOL : ERROR);
+        if (name == ERROR) {
+            text = "Je n'ai pas réussi à bien traiter la demande."
             response.setHeader('Content-Type', 'application/json');
             response.send(JSON.stringify({
                 "speech": text,
@@ -435,8 +451,8 @@ server.post('/SE', function (request, response) {
             }));
         } else {
             text = "Voici les infos :";
-            col = "nom";
-            row = param["BibliothequeName"] || param["museumName"] || param["piscineName"];
+            col = COLUMN_NAME;
+            row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME];
             csvName = name + ".csv";
             csv({
                 noheader: false,
@@ -446,57 +462,57 @@ server.post('/SE', function (request, response) {
                 .then((jsonObj) => {
                     console.log(jsonObj);
                     jsonObj.forEach(function (elt) {
-                        if (elt["nom"] == row) {
+                        if (elt[COLUMN_NAME] == row) {
                             output.push({
                                 "type": "card",
                                 "title": "Horaires",
-                                "image": elt["lienImage"],
-                                "text": elt["horaires"],
+                                "image": elt[CSV_PICTURE],
+                                "text": elt[INTENT_SCHEDULE],
                             })
                             output.push({
                                 "type": "card",
                                 "title": "Adresse",
-                                "image": elt["lienImage"],
-                                "text": elt["adresse"],
+                                "image": elt[CSV_PICTURE],
+                                "text": elt[INTENT_LOCATION],
                             })
                             if (ok) {
                                 output.push({
                                     "type": "card",
                                     "title": "Tarifs",
-                                    "image": elt["lienImage"],
-                                    "text": elt["tarifs"],
+                                    "image": elt[CSV_PICTURE],
+                                    "text": elt[INTENT_PRICING],
                                     "buttons": [{
                                         "type": "link",
                                         "text": "plus d'infos tarifs",
-                                        "value": elt["lienTarif"]
+                                        "value": elt[INTENT_MORE_PRICING]
                                     }]
                                 })
                             } else {
                                 output.push({
                                     "type": "card",
                                     "title": "Tarifs",
-                                    "image": elt["lienImage"],
+                                    "image": elt[CSV_PICTURE],
                                     "buttons": [{
                                         "type": "link",
                                         "text": "plus d'infos tarifs",
-                                        "value": elt["tarifs"]
+                                        "value": elt[INTENT_PRICING]
                                     }]
                                 })
                             }
                             output.push({
                                 "type": "card",
                                 "title": "Contact",
-                                "image": elt["lienImage"],
-                                "text": elt["contact"],
+                                "image": elt[CSV_PICTURE],
+                                "text": elt[INTENT_CONTACT],
                             })
                             output.push({
                                 "type": "card",
                                 "title": "Site internet",
-                                "image": elt["lienImage"],
+                                "image": elt[CSV_PICTURE],
                                 "buttons": [{
                                     "type": "link",
                                     "text": "Accéder au site",
-                                    "value": elt["website"]
+                                    "value": elt[INTENT_WEBSITE]
                                 }]
                             })
                         }
@@ -511,14 +527,13 @@ server.post('/SE', function (request, response) {
                 })
         }
     } else {
-        var ok = false;
-        var link = "";
-        var name = (param["BibliothequeName"] || param["lieus"]=="bibliotheque" ? "bibliotheque"
-            : param["museumName"] || param["lieus"]=="musee" ? "musee"
-                : param["piscineName"] || param["lieus"]=="piscine" ? "piscine" : "Error");
-        ok = param["piscineName"] || param["BibliothequeName"] || param["lieus"]=="bibliotheque" || param["lieus"]=="piscine" ? true : false;
-        if (name == "Error") {
-            text = "Une erreur est survenue, veuillez réessayer plus tard.."
+        var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] || param[PLACES]==LIBRARY || param[PLACES]==SWIMING_POOL ? true : false;
+        var name = (param[LIBRARY_NAME] || param[PLACES]==LIBRARY ? LIBRARY
+            : param[MUSEUM_NAME] || param[PLACES]==MUSEUM ? MUSEUM
+                : param[SWIMING_POOL_NAME] || param[PLACES]==SWIMING_POOL ? SWIMING_POOL : ERROR);
+        console.log("name " + name );
+        if (name == ERROR) {
+            text = "Je n'ai pas réussi à bien traiter la demande."
             response.setHeader('Content-Type', 'application/json');
             response.send(JSON.stringify({
                 "speech": text,
@@ -526,7 +541,7 @@ server.post('/SE', function (request, response) {
             }));
         } else {
             col = intent;
-            row = param["BibliothequeName"] || param["museumName"] || param["piscineName"] || "all";
+            row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
             csvName = name + ".csv";
             csv({
                 noheader: false,
@@ -536,27 +551,27 @@ server.post('/SE', function (request, response) {
                 .then((jsonObj) => {
                     console.log(jsonObj);
                     jsonObj.forEach(function (elt) {
-                        if (elt["nom"] == row || row == "all") {
-                            if (col == "tarifs") {
+                        if (elt[COLUMN_NAME] == row || row == "all") {
+                            if (col == INTENT_PRICING) {
                                 text = "Voici les tarifs :"
                                 if (ok) {
                                     output.push({
                                         "type": "card",
                                         "title": "Tarifs",
-                                        "image": elt["lienImage"],
-                                        "text": elt["tarifs"],
+                                        "image": elt[CSV_PICTURE],
+                                        "text": elt[INTENT_PRICING],
                                         "buttons": [{
                                             "type": "link",
                                             "text": "plus d'infos tarifs",
-                                            "value": elt["lienTarif"]
+                                            "value": elt[INTENT_MORE_PRICING]
                                         }]
                                     })
                                 } else {
                                     output.push({
                                         "type": "card",
                                         "title": "Tarifs",
-                                        "image": elt["lienImage"],
-                                        "text": elt["tarifs"],
+                                        "image": elt[CSV_PICTURE],
+                                        "text": elt[INTENT_PRICING],
                                     })
                                 }
                             } else {
@@ -564,7 +579,7 @@ server.post('/SE', function (request, response) {
                                 output.push({
                                     "type": "card",
                                     "title": col,
-                                    "image": elt["lienImage"],
+                                    "image": elt[CSV_PICTURE],
                                     "text": elt[col]
                                 })
                             }
@@ -582,6 +597,10 @@ server.post('/SE', function (request, response) {
     }
 
 })
+
+
+
+
 
 server.listen(port, function () {
     console.log("Server is up and running...");
