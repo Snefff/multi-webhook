@@ -402,7 +402,8 @@ server.post('/SE', function (request, response) {
         col = COLUMN_NAME;
         csv({
             noheader: false,
-            delimiter: [";"]
+            delimiter: [";"],
+            escape: "\"
         })
             .fromFile(csvName + ".csv")
             .then((jsonObj) => {
@@ -456,7 +457,8 @@ server.post('/SE', function (request, response) {
             csvName = name + ".csv";
             csv({
                 noheader: false,
-                delimiter: [";"]
+                delimiter: [";"],
+                escape: "\"
             })
                 .fromFile(csvName)
                 .then((jsonObj) => {
@@ -545,7 +547,8 @@ server.post('/SE', function (request, response) {
             csvName = name + ".csv";
             csv({
                 noheader: false,
-                delimiter: [";"]
+                delimiter: [";"],
+                escape: "\"
             })
                 .fromFile(csvName)
                 .then((jsonObj) => {
