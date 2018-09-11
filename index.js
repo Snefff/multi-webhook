@@ -579,7 +579,7 @@ server.post('/SE', function (request, response) {
                                 text = "Voici les informations :"
                                 output.push({
                                     "type": "card",
-                                    "title": col,
+                                    "title": col.replace("Lieux_",""),
                                     "image": elt[CSV_PICTURE],
                                     "text": elt[col]
                                 })
