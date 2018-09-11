@@ -394,6 +394,7 @@ server.post('/SE', function (request, response) {
     var output = new Array();
     var intent = request.body.intent && request.body.intent.name;
     var param = request.body.intent &&  request.body.intent.inputs;
+    intent.replace('.','_');
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
     param && Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
@@ -402,8 +403,7 @@ server.post('/SE', function (request, response) {
         col = COLUMN_NAME;
         csv({
             noheader: false,
-            delimiter: [";"],
-            escape: "."
+            delimiter: [";"]
         })
             .fromFile(csvName + ".csv")
             .then((jsonObj) => {
@@ -457,8 +457,7 @@ server.post('/SE', function (request, response) {
             csvName = name + ".csv";
             csv({
                 noheader: false,
-                delimiter: [";"],
-                escape: "."
+                delimiter: [";"]
             })
                 .fromFile(csvName)
                 .then((jsonObj) => {
@@ -547,8 +546,7 @@ server.post('/SE', function (request, response) {
             csvName = name + ".csv";
             csv({
                 noheader: false,
-                delimiter: [";"],
-                escape: "."
+                delimiter: [";"]
             })
                 .fromFile(csvName)
                 .then((jsonObj) => {
