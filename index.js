@@ -413,7 +413,7 @@ server.post('/SE', function (request, response) {
                     output.push(
                         {
                             "type": "card",
-                            "title": elt[col].replace("Lieux_",""),
+                            "title": elt[col],
                             "image": elt[CSV_PICTURE],
                             "buttons": [{
                                 "type": "button",
