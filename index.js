@@ -14,13 +14,13 @@ const SWIMING_POOL ="piscine";
 const PLACES ="Lieus";
 const MUSEUM ="musee";
 const ERROR ="Error";
-const INTENT_LIST ="Lieux.liste";
-const INTENT_MORE_INFO ="Lieux.details";
-const INTENT_PRICING ="Lieux.tarifs";
-const INTENT_SCHEDULE ="Lieux.horaires";
-const INTENT_CONTACT ="Lieux.contact";
-const INTENT_WEBSITE ="Lieux.website";
-const INTENT_LOCATION = "Lieux.adresse";
+const INTENT_LIST ="Lieux_liste";
+const INTENT_MORE_INFO ="Lieux_details";
+const INTENT_PRICING ="Lieux_tarifs";
+const INTENT_SCHEDULE ="Lieux_horaires";
+const INTENT_CONTACT ="Lieux_contact";
+const INTENT_WEBSITE ="Lieux_website";
+const INTENT_LOCATION = "Lieux_adresse";
 const CSV_PICTURE = "lienImage";
 
 
