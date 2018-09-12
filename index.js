@@ -403,7 +403,7 @@ server.post('/SE', function (request, response) {
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
     param && Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
-    if (intent == INTENT_LIST || (intent = INTENT_MORE_INFO && row =="all")) {
+    if (intent == INTENT_LIST || (intent = INTENT_MORE_INFO && row == "all")) {
         csvName = name;
         if (name == ERROR) {
             text = "Je n'ai pas réussi à bien traiter la demande."
@@ -430,15 +430,18 @@ server.post('/SE', function (request, response) {
                                 "image": elt[CSV_PICTURE],
                                 "buttons": [{
                                     "type": "button",
-                                    "text": "Horaires " + elt[col]
+                                    "text": "Horaires",
+                                    "value": "Horaires " + elt[col]
                                 },
                                 {
                                     "type": "button",
-                                    "text": "Adresse " + elt[col]
+                                    "text": "Adresse",
+                                    "value": "Adresse " + elt[col]
                                 },
                                 {
                                     "type": "button",
-                                    "text": "Plus d'infos " + elt[col]
+                                    "text": "Plus d'infos",
+                                    "value": "Plus d'infos " + elt[col]
                                 }]
                             }
                         )
@@ -463,7 +466,7 @@ server.post('/SE', function (request, response) {
         } else {
             text = "Voici les infos :";
             col = COLUMN_NAME;
-                csvName = name + ".csv";
+            csvName = name + ".csv";
             csv({
                 noheader: false,
                 delimiter: [";"]
@@ -612,10 +615,11 @@ server.post('/SE', function (request, response) {
 function buildCard(type = "card", title, picture, text, ...buttons) {
     var btn = new Array();
     buttons.forEach(function (element) {
-        btn.push({
-            "type": "button",
-            "text": element
-        })
+            btn.push({
+                "type": element["type"],
+                "text": element["text"],
+                "value": element["value"]
+            })
     })
     var card = {
         "type": type,
