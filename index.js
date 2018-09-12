@@ -389,8 +389,6 @@ server.post('/getNews', function (request, response) {
 
 server.post('/SE', function (request, response) {
     var csvName = "";
-    var col = "";
-    var row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";;
     var text = "";
     var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] || param[PLACES] == LIBRARY || param[PLACES] == SWIMING_POOL ? true : false;
     var name = (param[LIBRARY_NAME] || param[PLACES] == LIBRARY ? LIBRARY
@@ -399,6 +397,8 @@ server.post('/SE', function (request, response) {
     var output = new Array();
     var intent = request.body.intent && request.body.intent.name;
     var param = request.body.intent && request.body.intent.inputs;
+    var col = "";
+    var row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
     intent = intent.replace('.', '_');
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
