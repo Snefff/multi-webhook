@@ -5,22 +5,22 @@ const bodyParser = require('body-parser');
 const csv = require('csvtojson')
 var unirest = require("unirest");
 var moment = require("moment");
-const COLUMN_NAME ="nom";
-const SWIMING_POOL_NAME ="piscineName";
-const LIBRARY_NAME ="BibliothequeName";
+const COLUMN_NAME = "nom";
+const SWIMING_POOL_NAME = "piscineName";
+const LIBRARY_NAME = "BibliothequeName";
 const MUSEUM_NAME = "museumName";
-const LIBRARY ="bibliotheque";
-const SWIMING_POOL ="piscine";
-const PLACES ="Lieus";
-const MUSEUM ="musee";
-const ERROR ="Error";
-const INTENT_LIST ="Lieux_liste";
-const INTENT_MORE_INFO ="Lieux_details";
-const INTENT_PRICING ="Lieux_tarifs";
+const LIBRARY = "bibliotheque";
+const SWIMING_POOL = "piscine";
+const PLACES = "Lieus";
+const MUSEUM = "musee";
+const ERROR = "Error";
+const INTENT_LIST = "Lieux_liste";
+const INTENT_MORE_INFO = "Lieux_details";
+const INTENT_PRICING = "Lieux_tarifs";
 const CSV_MORE_PRICING = "lienTarif";
-const INTENT_SCHEDULE ="Lieux_horaires";
-const INTENT_CONTACT ="Lieux_contact";
-const INTENT_WEBSITE ="Lieux_website";
+const INTENT_SCHEDULE = "Lieux_horaires";
+const INTENT_CONTACT = "Lieux_contact";
+const INTENT_WEBSITE = "Lieux_website";
 const INTENT_LOCATION = "Lieux_adresse";
 const CSV_PICTURE = "lienImage";
 
@@ -390,60 +390,69 @@ server.post('/getNews', function (request, response) {
 server.post('/SE', function (request, response) {
     var csvName = "";
     var col = "";
-    var row = "";
+    var row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";;
     var text = "";
+    var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] || param[PLACES] == LIBRARY || param[PLACES] == SWIMING_POOL ? true : false;
+    var name = (param[LIBRARY_NAME] || param[PLACES] == LIBRARY ? LIBRARY
+        : param[MUSEUM_NAME] || param[PLACES] == MUSEUM ? MUSEUM
+            : param[SWIMING_POOL_NAME] || param[PLACES] == SWIMING_POOL ? SWIMING_POOL : ERROR);
     var output = new Array();
     var intent = request.body.intent && request.body.intent.name;
-    var param = request.body.intent &&  request.body.intent.inputs;
-    intent = intent.replace('.','_');
+    var param = request.body.intent && request.body.intent.inputs;
+    intent = intent.replace('.', '_');
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
     param && Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
-    if (intent == INTENT_LIST) {
-        csvName = param[PLACES];
-        col = COLUMN_NAME;
-        csv({
-            noheader: false,
-            delimiter: [";"]
-        })
-            .fromFile(csvName + ".csv")
-            .then((jsonObj) => {
-                text = "Voici la liste des " + csvName + "s :";
-                jsonObj.forEach(function (elt) {
-                    console.log(elt[col]);
-                    output.push(
-                        {
-                            "type": "card",
-                            "title": elt[col],
-                            "image": elt[CSV_PICTURE],
-                            "buttons": [{
-                                "type": "button",
-                                "text": "Horaires " + elt[col]
-                            },
-                            {
-                                "type": "button",
-                                "text": "Adresse " + elt[col]
-                            },
-                            {
-                                "type": "button",
-                                "text": "Plus d'infos " + elt[col]
-                            }]
-                        }
-                    )
-                })
-                console.log("-------------- output ---------------");
-                console.log(output);
-                response.setHeader('Content-Type', 'application/json');
-                response.send(JSON.stringify({
-                    "speech": text,
-                    "posts": output
-                }));
+    if (intent == INTENT_LIST || (intent = INTENT_MORE_INFO && row =="all")) {
+        csvName = name;
+        if (name == ERROR) {
+            text = "Je n'ai pas réussi à bien traiter la demande."
+            response.setHeader('Content-Type', 'application/json');
+            response.send(JSON.stringify({
+                "speech": text,
+                "posts": []
+            }));
+        } else {
+            col = COLUMN_NAME;
+            csv({
+                noheader: false,
+                delimiter: [";"]
             })
+                .fromFile(csvName + ".csv")
+                .then((jsonObj) => {
+                    text = "Voici la liste des " + csvName + "s :";
+                    jsonObj.forEach(function (elt) {
+                        console.log(elt[col]);
+                        output.push(
+                            {
+                                "type": "card",
+                                "title": elt[col],
+                                "image": elt[CSV_PICTURE],
+                                "buttons": [{
+                                    "type": "button",
+                                    "text": "Horaires " + elt[col]
+                                },
+                                {
+                                    "type": "button",
+                                    "text": "Adresse " + elt[col]
+                                },
+                                {
+                                    "type": "button",
+                                    "text": "Plus d'infos " + elt[col]
+                                }]
+                            }
+                        )
+                    })
+                    console.log("-------------- output ---------------");
+                    console.log(output);
+                    response.setHeader('Content-Type', 'application/json');
+                    response.send(JSON.stringify({
+                        "speech": text,
+                        "posts": output
+                    }));
+                })
+        }
     } else if (intent == INTENT_MORE_INFO) {
-        var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] ? true : false;
-        var name = (param[LIBRARY_NAME] ? LIBRARY
-            : param[MUSEUM_NAME] ? MUSEUM
-                : param[SWIMING_POOL_NAME] ? SWIMING_POOL : ERROR);
         if (name == ERROR) {
             text = "Je n'ai pas réussi à bien traiter la demande."
             response.setHeader('Content-Type', 'application/json');
@@ -454,8 +463,7 @@ server.post('/SE', function (request, response) {
         } else {
             text = "Voici les infos :";
             col = COLUMN_NAME;
-            row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME];
-            csvName = name + ".csv";
+                csvName = name + ".csv";
             csv({
                 noheader: false,
                 delimiter: [";"]
@@ -517,6 +525,10 @@ server.post('/SE', function (request, response) {
                                     "value": elt[INTENT_WEBSITE]
                                 }]
                             })
+                        } else if (row == "all") {
+                            output.push({
+
+                            })
                         }
                     })
                     console.log("-------------- output ---------------");
@@ -529,11 +541,7 @@ server.post('/SE', function (request, response) {
                 })
         }
     } else {
-        var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] || param[PLACES]==LIBRARY || param[PLACES]==SWIMING_POOL ? true : false;
-        var name = (param[LIBRARY_NAME] || param[PLACES]==LIBRARY ? LIBRARY
-            : param[MUSEUM_NAME] || param[PLACES]==MUSEUM ? MUSEUM
-                : param[SWIMING_POOL_NAME] || param[PLACES]==SWIMING_POOL ? SWIMING_POOL : ERROR);
-        console.log("name " + name );
+        console.log("name " + name);
         if (name == ERROR) {
             text = "Je n'ai pas réussi à bien traiter la demande."
             response.setHeader('Content-Type', 'application/json');
@@ -559,7 +567,7 @@ server.post('/SE', function (request, response) {
                                 if (ok) {
                                     output.push({
                                         "type": "card",
-                                        "title": "Tarifs",
+                                        "title": row == "all" ? elt[COLUMN_NAME] : "Tarifs",
                                         "image": elt[CSV_PICTURE],
                                         "text": elt[INTENT_PRICING],
                                         "buttons": [{
@@ -571,7 +579,7 @@ server.post('/SE', function (request, response) {
                                 } else {
                                     output.push({
                                         "type": "card",
-                                        "title": "Tarifs",
+                                        "title": row == "all" ? elt[COLUMN_NAME] : "Tarifs",
                                         "image": elt[CSV_PICTURE],
                                         "text": elt[INTENT_PRICING],
                                     })
@@ -580,7 +588,7 @@ server.post('/SE', function (request, response) {
                                 text = "Voici les informations :"
                                 output.push({
                                     "type": "card",
-                                    "title": col.replace("Lieux_",""),
+                                    "title": row == "all" ? elt[COLUMN_NAME] : col.replace("Lieux_", ""),
                                     "image": elt[CSV_PICTURE],
                                     "text": elt[col]
                                 })
@@ -600,6 +608,24 @@ server.post('/SE', function (request, response) {
 
 })
 
+
+function buildCard(type = "card", title, picture, text, ...buttons) {
+    var btn = new Array();
+    buttons.forEach(function (element) {
+        btn.push({
+            "type": "button",
+            "text": element
+        })
+    })
+    var card = {
+        "type": type,
+        "title": title,
+        "image": picture,
+        "text": text,
+        "buttons": btn
+    }
+    return card;
+}
 
 
 
