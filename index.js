@@ -403,6 +403,7 @@ server.post('/SE', function (request, response) {
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
     param && Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
+    console.log(intent == INTENT_MORE_INFO);
     if (intent == INTENT_LIST || (intent = INTENT_MORE_INFO && row == "all")) {
         csvName = name;
         if (name == ERROR) {
