@@ -17,6 +17,7 @@ const ERROR ="Error";
 const INTENT_LIST ="Lieux_liste";
 const INTENT_MORE_INFO ="Lieux_details";
 const INTENT_PRICING ="Lieux_tarifs";
+const CSV_MORE_PRICING = "lienTarif";
 const INTENT_SCHEDULE ="Lieux_horaires";
 const INTENT_CONTACT ="Lieux_contact";
 const INTENT_WEBSITE ="Lieux_website";
@@ -264,7 +265,7 @@ server.post('/support', function (request, response) {
         + (param["typeMateriel"] ? param["typeMateriel"] != "Ordinateur" ? "concernant un périphérique "
             : "concernant votre ordinateur "
             : param["typeService"] ? param["typeService"] != "Connection" ? "concernant l'accés à un serivce "
-                : "concernant la connection à un serivce " : ".");
+                : "concernant la connection à un service " : ".");
 
     response.setHeader('Content-Type', 'application/json');
     response.send(JSON.stringify({
@@ -485,7 +486,7 @@ server.post('/SE', function (request, response) {
                                     "buttons": [{
                                         "type": "link",
                                         "text": "plus d'infos tarifs",
-                                        "value": elt[INTENT_MORE_PRICING]
+                                        "value": elt[CSV_MORE_PRICING]
                                     }]
                                 })
                             } else {
@@ -564,7 +565,7 @@ server.post('/SE', function (request, response) {
                                         "buttons": [{
                                             "type": "link",
                                             "text": "plus d'infos tarifs",
-                                            "value": elt[INTENT_MORE_PRICING]
+                                            "value": elt[CSV_MORE_PRICING]
                                         }]
                                     })
                                 } else {
