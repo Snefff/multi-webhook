@@ -403,8 +403,7 @@ server.post('/SE', function (request, response) {
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
     param && Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
-    console.log(intent == INTENT_MORE_INFO);
-    if (intent == INTENT_LIST || (intent = INTENT_MORE_INFO && row == "all")) {
+    if (intent == INTENT_LIST || (intent == INTENT_MORE_INFO && row == "all")) {
         csvName = name;
         if (name == ERROR) {
             text = "Je n'ai pas réussi à bien traiter la demande."
@@ -555,7 +554,7 @@ server.post('/SE', function (request, response) {
             }));
         } else {
             col = intent;
-            console.log(col);
+
             row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
             csvName = name + ".csv";
             csv({
@@ -593,7 +592,7 @@ server.post('/SE', function (request, response) {
                                 text = "Voici les informations :"
                                 output.push({
                                     "type": "card",
-                                    "title": (row == "all" ? elt[COLUMN_NAME] : col.replace("Lieux_", "")),
+                                    "title": row == "all" ? elt[COLUMN_NAME] : col.replace("Lieux_", ""),
                                     "image": elt[CSV_PICTURE],
                                     "text": elt[col]
                                 })
