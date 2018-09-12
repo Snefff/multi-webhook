@@ -555,6 +555,7 @@ server.post('/SE', function (request, response) {
             }));
         } else {
             col = intent;
+            console.log(col);
             row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
             csvName = name + ".csv";
             csv({
@@ -592,7 +593,7 @@ server.post('/SE', function (request, response) {
                                 text = "Voici les informations :"
                                 output.push({
                                     "type": "card",
-                                    "title": row == "all" ? elt[COLUMN_NAME] : col.replace("Lieux_", ""),
+                                    "title": (row == "all" ? elt[COLUMN_NAME] : col.replace("Lieux_", "")),
                                     "image": elt[CSV_PICTURE],
                                     "text": elt[col]
                                 })
