@@ -390,13 +390,13 @@ server.post('/getNews', function (request, response) {
 server.post('/SE', function (request, response) {
     var csvName = "";
     var text = "";
+    var output = new Array();
+    var intent = request.body.intent && request.body.intent.name;
+    var param = request.body.intent && request.body.intent.inputs;
     var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] || param[PLACES] == LIBRARY || param[PLACES] == SWIMING_POOL ? true : false;
     var name = (param[LIBRARY_NAME] || param[PLACES] == LIBRARY ? LIBRARY
         : param[MUSEUM_NAME] || param[PLACES] == MUSEUM ? MUSEUM
             : param[SWIMING_POOL_NAME] || param[PLACES] == SWIMING_POOL ? SWIMING_POOL : ERROR);
-    var output = new Array();
-    var intent = request.body.intent && request.body.intent.name;
-    var param = request.body.intent && request.body.intent.inputs;
     var col = "";
     var row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
     intent = intent.replace('.', '_');
