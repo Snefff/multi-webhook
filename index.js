@@ -239,16 +239,18 @@ server.post('/movie', function (request, response) {
 
 server.post('/reservation', function (request, response) {
     var param = request.body.intent.inputs;
+    console.log(request.body);
+    console.log("-----------------------------------");
     console.log("List of your entities : ");
     Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
     let date = moment(param["ggwg/datetime"]).format("D/M");
-    let text = "Nous vous confirmons l'enregistrement de votre réservation "
-        + (param["typeResa"] == "Restaurant" ? "d'une table pour "
+    let text = "Nous vous confirmons l'enregistrement de votre réservation ";
+    /*    + (param["typeResa"] == "Restaurant" ? "d'une table pour "
             : param["typeResa"] == "Hotel" ? "d'une chambre pour "
                 : param["typeResa"] == "Visio" ? "d'une salle de visio pour "
                     : "pour ")
         + param["ggwg/number"] + " personnes pour le " + date
-        + (param["ggwg/duration"] ? "pendant " + param["ggwg/duration"] : "");
+        + (param["ggwg/duration"] ? "pendant " + param["ggwg/duration"] : "");*/
     console.log(date);
     response.setHeader('Content-Type', 'application/json');
     response.send(JSON.stringify({
