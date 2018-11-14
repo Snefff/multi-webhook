@@ -25,7 +25,6 @@ const INTENT_LOCATION = "Lieux_adresse";
 const CSV_PICTURE = "lienImage";
 
 
-
 var port = process.env.PORT || 8080;
 
 
