@@ -22,7 +22,10 @@ const INTENT_SCHEDULE = "Lieux_horaires";
 const INTENT_CONTACT = "Lieux_contact";
 const INTENT_WEBSITE = "Lieux_website";
 const INTENT_LOCATION = "Lieux_adresse";
+const INTENT_EQUIPEMENT = "Lieux_equipement";
+
 const CSV_PICTURE = "lienImage";
+
 
 
 var port = process.env.PORT || 8080;
@@ -394,7 +397,9 @@ server.post('/SE', function (request, response) {
     var output = new Array();
     var intent = request.body.intent && request.body.intent.name;
     var param = request.body.intent && request.body.intent.inputs;
+
     var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] || param[PLACES] == LIBRARY || param[PLACES] == SWIMING_POOL ? true : false;
+    
     var name = (param[LIBRARY_NAME] || param[PLACES] == LIBRARY ? LIBRARY
         : param[MUSEUM_NAME] || param[PLACES] == MUSEUM ? MUSEUM
             : param[SWIMING_POOL_NAME] || param[PLACES] == SWIMING_POOL ? SWIMING_POOL : ERROR);
@@ -547,6 +552,7 @@ server.post('/SE', function (request, response) {
     } else {
         console.log("name " + name);
         if (name == ERROR) {
+            console.log("name " + name);
             text = "Je n'ai pas réussi à bien traiter la demande."
             response.setHeader('Content-Type', 'application/json');
             response.send(JSON.stringify({
