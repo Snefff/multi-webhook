@@ -11,6 +11,7 @@ const LIBRARY_NAME = "BibliothequeName";
 const MUSEUM_NAME = "museumName";
 const LIBRARY = "bibliotheque";
 const SWIMING_POOL = "piscine";
+const PATINOIRE = "patinoire";
 const PLACES = "Lieus";
 const MUSEUM = "musee";
 const ERROR = "Error";
@@ -402,7 +403,8 @@ server.post('/SE', function (request, response) {
     
     var name = (param[LIBRARY_NAME] || param[PLACES] == LIBRARY ? LIBRARY
         : param[MUSEUM_NAME] || param[PLACES] == MUSEUM ? MUSEUM
-            : param[SWIMING_POOL_NAME] || param[PLACES] == SWIMING_POOL ? SWIMING_POOL : ERROR);
+            : param[SWIMING_POOL_NAME] || param[PLACES] == SWIMING_POOL ? SWIMING_POOL 
+            : param[PLACES] == PATINOIRE ? PATINOIRE : ERROR);
     var col = "";
     var row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
     intent = intent.replace('.', '_');
