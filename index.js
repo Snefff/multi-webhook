@@ -9,6 +9,7 @@ const COLUMN_NAME = "nom";
 const SWIMING_POOL_NAME = "piscineName";
 const LIBRARY_NAME = "BibliothequeName";
 const MUSEUM_NAME = "museumName";
+const EVENT_CHRISTMAS = "evenementNoel";
 const LIBRARY = "bibliotheque";
 const SWIMING_POOL = "piscine";
 const PATINOIRE = "patinoire";
@@ -397,15 +398,17 @@ server.post('/SE', function (request, response) {
     var text = "";
     var output = new Array();
     var intent = request.body.intent && request.body.intent.name;
-    var param = request.body.intent && request.body.intent.inputs;
+    var param = request.body.intent && request.body.intent.inputs; 
 
     var ok = param[SWIMING_POOL_NAME] || param[LIBRARY_NAME] || param[PLACES] == LIBRARY || param[PLACES] == SWIMING_POOL ? true : false;
     
     var name = (param[LIBRARY_NAME] || param[PLACES] == LIBRARY ? LIBRARY
         : param[MUSEUM_NAME] || param[PLACES] == MUSEUM ? MUSEUM
             : param[SWIMING_POOL_NAME] || param[PLACES] == SWIMING_POOL ? SWIMING_POOL 
-            : param[PLACES] == PATINOIRE ? PATINOIRE : ERROR);
+            : param[PLACES] == PATINOIRE ? PATINOIRE
+            : param[EVENT_CHRISTMAS] ? EVENT_CHRISTMAS : ERROR);
     var col = "";
+    var temp = "";
     var row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
     intent = intent.replace('.', '_');
     console.log("Intent found : " + intent);
@@ -421,7 +424,7 @@ server.post('/SE', function (request, response) {
                 "posts": []
             }));
         } else {
-            col = COLUMN_NAME;
+            col = param[EVENT_CHRISTMAS] ? "id" : COLUMN_NAME;
             csv({
                 noheader: false,
                 delimiter: [";"]
@@ -434,7 +437,7 @@ server.post('/SE', function (request, response) {
                         output.push(
                             {
                                 "type": "card",
-                                "title": elt[col],
+                                "title": elt[COLUMN_NAME],
                                 "image": elt[CSV_PICTURE],
                                 "buttons": [{
                                     "type": "button",
@@ -473,7 +476,7 @@ server.post('/SE', function (request, response) {
             }));
         } else {
             text = "Voici les infos :";
-            col = COLUMN_NAME;
+            col = param[EVENT_CHRISTMAS] ? "id" : COLUMN_NAME;
             csvName = name + ".csv";
             csv({
                 noheader: false,
@@ -513,11 +516,7 @@ server.post('/SE', function (request, response) {
                                     "type": "card",
                                     "title": "Tarifs",
                                     "image": elt[CSV_PICTURE],
-                                    "buttons": [{
-                                        "type": "link",
-                                        "text": "plus d'infos tarifs",
-                                        "value": elt[INTENT_PRICING]
-                                    }]
+                                    "text": elt[INTENT_PRICING],
                                 })
                             }
                             output.push({
@@ -563,7 +562,7 @@ server.post('/SE', function (request, response) {
             }));
         } else {
             col = intent;
-
+            temp = param[EVENT_CHRISTMAS] ? "id" : COLUMN_NAME;
             row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
             csvName = name + ".csv";
             csv({
@@ -574,7 +573,7 @@ server.post('/SE', function (request, response) {
                 .then((jsonObj) => {
                     console.log(jsonObj);
                     jsonObj.forEach(function (elt) {
-                        if (elt[COLUMN_NAME] == row || row == "all") {
+                        if (elt[temp] == row || row == "all") {
                             if (col == INTENT_PRICING) {
                                 text = "Voici les tarifs :"
                                 if (ok) {
@@ -594,7 +593,7 @@ server.post('/SE', function (request, response) {
                                         "type": "card",
                                         "title": row == "all" ? elt[COLUMN_NAME] : "Tarifs",
                                         "image": elt[CSV_PICTURE],
-                                        "text": elt[INTENT_PRICING],
+                                        "text": elt[INTENT_PRICING]
                                     })
                                 }
                             } else {
