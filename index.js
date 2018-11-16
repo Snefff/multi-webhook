@@ -409,11 +409,12 @@ server.post('/SE', function (request, response) {
             : param[EVENT_CHRISTMAS] ? EVENT_CHRISTMAS : ERROR);
     var col = "";
     var temp = "";
-    var row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
+    var row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || param[EVENT_CHRISTMAS] || "all";
     intent = intent.replace('.', '_');
     console.log("Intent found : " + intent);
     console.log("List of your entities : ");
     param && Object.keys(param).forEach(element => { console.log(element + " - " + param[element]) });
+    console.log("You search : " + row);
     if (intent == INTENT_LIST || (intent == INTENT_MORE_INFO && row == "all")) {
         csvName = name;
         if (name == ERROR) {
@@ -563,7 +564,7 @@ server.post('/SE', function (request, response) {
         } else {
             col = intent;
             temp = param[EVENT_CHRISTMAS] ? "id" : COLUMN_NAME;
-            row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || "all";
+            row = param[LIBRARY_NAME] || param[MUSEUM_NAME] || param[SWIMING_POOL_NAME] || param[EVENT_CHRISTMAS] || "all";
             csvName = name + ".csv";
             csv({
                 noheader: false,
