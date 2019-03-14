@@ -5,6 +5,11 @@ const bodyParser = require('body-parser');
 const csv = require('csvtojson')
 var unirest = require("unirest");
 var moment = require("moment");
+const { google } = require('googleapis');
+const path = require('path');
+const fs = require('fs');
+const { JWT } = require('google-auth-library');
+
 const COLUMN_NAME = "nom";
 const SWIMING_POOL_NAME = "piscineName";
 const LIBRARY_NAME = "BibliothequeName";
@@ -25,9 +30,23 @@ const INTENT_CONTACT = "Lieux_contact";
 const INTENT_WEBSITE = "Lieux_website";
 const INTENT_LOCATION = "Lieux_adresse";
 const INTENT_EQUIPEMENT = "Lieux_equipement";
-
 const CSV_PICTURE = "lienImage";
-
+const calPath = path.join(__dirname, 'calendarId.json');
+const oauthPath = path.join(__dirname, 'oauthService.json');
+const TIME = "ggwg/date-time";
+const DURATION = "ggwg/duration";
+if (fs.existsSync(calPath)) {
+    calFile = require(calPath);
+}
+if (fs.existsSync(oauthPath)) {
+    oauthFile = require(oauthPath);
+}
+const client = new JWT({
+    email: oauthFile.client_email,
+    key: oauthFile.private_key,
+    scopes: ['https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/cloud-platform'],
+})
+const calendar = google.calendar({ version: 'v3', auth: client });
 
 
 var port = process.env.PORT || 8080;
@@ -37,6 +56,141 @@ var port = process.env.PORT || 8080;
 const server = express();
 server.use(bodyParser.json());
 
+server.post('/reservation', async function (request, response) {
+    var roomIndex;
+    var param = request.body.intent.inputs; // entities
+    var intent = request.body.intent.name;
+    var text = "Le creneau demandé est disponible, voulez vous confirmer la reservation ?"; // response OK
+    var textOk = "Reservation effectué!";
+    var textErr = "Le creneau demandé n'est pas disponible"; // response KO
+    var richText; // rich message
+    response.setHeader('Content-Type', 'application/json');
+    // récupérer intent et entities
+    console.log("intent : " + intent);
+    Object.keys(param).forEach(element => {
+        console.log(element + " - " + param[element]);
+    });
+    //si réservation 
+    //Verifier que la salle existe
+    for (var cal of calFile) {
+        if (cal.name.indexOf(param["salle"]) + 1) {
+            console.log(cal.name);
+            roomIndex = calFile.indexOf(cal);
+        }
+    }
+    console.log(roomIndex);
+    //Verifier que le creneau soit libre
+    if(intent == "reservation.salle") {
+        const free = await getEvent(param[TIME], param[DURATION], roomIndex);
+        if (free) {
+            richText = [{
+                "type": "button",
+                "text": "Confirmer",
+                "value": "confirmer la reservation"
+            },
+            {
+                "type": "button",
+                "text": "Annuler",
+                "value": "annuler la reservation"
+            }];
+            response.send(JSON.stringify({
+                "speech": text,
+                "posts": [richText]
+            }));
+        } else {
+            richText = [{
+                "type": "button",
+                "text": "Autre salle",
+                "value": "autre salle"
+            },
+            {
+                "type": "button",
+                "text": "Autre creneau",
+                "value": "autre creneau"
+            }];
+            response.send(JSON.stringify({
+                "speech": textErr,
+                "posts": [richText]
+            }));
+        }
+    }else{
+        await setEvent(param[TIME], param[DURATION], roomIndex);
+        response.send(JSON.stringify({
+            "speech": textOk,
+            "posts": []
+        }));
+    }
+
+});
+
+async function init() {
+    try {
+
+        calendar.calendarList.list(function (err, resp) {
+            for (var item of resp.data.items) {
+                console.log(item.summary + " " + item.id);
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function getEvent(time, duration, roomIdx) {
+    var free = true;
+    var start = moment(time);
+    var end = moment(start);
+    end.add(duration.hours, 'hours');
+    var timeMIN = moment(start);
+    timeMIN.subtract(timeMIN.hour(), 'hours');
+    timeMAX = moment(timeMIN);
+    timeMAX.add(23, 'hours');
+    return new Promise(function (resolve, reject) {
+        calendar.events.list({
+            calendarId: calFile[roomIdx].id,
+            timeMax: timeMAX.toISOString(),
+            timeMin: timeMIN.toISOString(),
+            //maxResults: 10,
+            singleEvents: true,
+            orderBy: 'startTime',
+        }, (err, res) => {
+            var i = 0;
+            for (var item of res.data.items) {
+                i++;
+                var tStart = moment(item.start.dateTime);
+                var tEnd = moment(item.end.dateTime);
+                var duration = tEnd.hour() - tStart.hour();
+                console.log(item.id + " - " + item.summary + " le " + (tStart.month() + 1) + "\\" + tStart.date() + " à " + tStart.hour() + "h pendant " + duration + "h");
+                free &= (tEnd.isBefore(start) || tStart.isAfter(end));
+                console.log(tEnd.isBefore(start));
+                console.log(tStart.isAfter(end));
+                console.log("start " + start.toISOString());
+                console.log("end " + end.toISOString());
+                console.log("tstart " + tStart.toISOString());
+                console.log("tend " + tEnd.toISOString());
+            }
+            console.log("found " + i + " results");
+            console.log(free ? "libre" : "occupe");
+            resolve(free);
+        })
+    });
+}
+
+async function setEvent(time, duration, idx) {
+    const end = moment(time);
+    end.add(duration.hours, "hours");
+    return new Promise(function (resolve, reject) {
+        calendar.events.insert({
+            calendarId: calFile[idx].id,
+            resource: {
+                start: { dateTime: moment(time).toISOString() },
+                end: { dateTime: end.toISOString() }
+            }
+        }, (err, res) => {
+            resolve();
+        });
+    });
+}
 
 // entry point
 server.post('/cocktail', function (request, response) {
